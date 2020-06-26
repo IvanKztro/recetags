@@ -2,13 +2,14 @@ import React, {useState, useEffect, useContext} from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled'
 import tokenAuth from '../../config/token'
-
 import clienteAxios from '../../config/axios';
 
 // import useAutenticacion from '../../hooks/useAutenticacion';
-
 import AuthContext from '../../context/auth/authContext'
 //import clienteAxios from 'axios';
+import {authUsuarioAction} from '../../actions/authActions';
+import {useDispatch, useSelector} from 'react-redux'
+
 
 const Navbar = () => {
     //style={{"background-color": "#e3f2fd", "color": "black"}}
@@ -17,7 +18,23 @@ const Navbar = () => {
     const [busqueda, setBusqueda] = useState("");
    // console.log(isLogin);
 
+ 
+
+
    //const {usuario, autenticado, autenticarUsuario} = useContext(AuthContext);
+   const dispatch = useDispatch();
+    //OBTENER STATE DE REDUX
+    const usuarioRedux = useSelector(state => state.usuario);
+    const autenticadoRedux = useSelector(state => state.autenticado);
+    console.log(usuarioRedux);
+   
+   useEffect(() => {
+        //authToken(localStorage.getItem('tokenRecetas'));
+        console.log("effect")
+        const authUsuario = () => dispatch(authUsuarioAction());
+        authUsuario();
+        console.log(usuarioRedux);
+   }, [autenticadoRedux]);
 
    
 
@@ -60,15 +77,6 @@ const Navbar = () => {
         }
     `;
 
-    useEffect(() => {
-            
-        ///autenticarUsuario();
-        console.log("hoaaaa");
-        
-        // eslint-disable-next-line
-    },[])
-
-    
     
     return ( 
         <>
@@ -94,10 +102,10 @@ const Navbar = () => {
                     <Link  href="/crearReceta"><a className="nav-link" >Crear Receta</a></Link>
                 </li>
                 </ul>
-
+                
                 <ul className="navbar-nav">
                     {
-                        isLogin 
+                        autenticadoRedux 
                         ?
                         <li className="nav-item">
                             <Link  href="/">

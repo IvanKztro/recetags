@@ -11,15 +11,15 @@ import {createWrapper} from 'next-redux-wrapper'
 import { Provider } from 'react-redux'
 import store from '../store'
 
-class MyApp extends App{
-    render(){
-        const {Component, pageProps} = this.props
+const MyApp = (props) => {
+    
+        const {Component, pageProps} = props
         return(
-            <Provider store={store}>
+            <Provider store={store} >
                 <Component {...pageProps}/>
             </Provider>
         )
-    }
+    
 }
 
 const makeStore =  () => store;

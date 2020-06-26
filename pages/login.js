@@ -12,6 +12,9 @@ import clienteAxios from '../config/axios';
 import tokenAuth from '../config/token'
 
 import useAutenticacion from '../hooks/useAutenticacion';
+import {useDispatch, useSelector} from 'react-redux'
+ //ACTIONS DE REDUX
+ import {loginUsuarioAction} from '../actions/authActions'
 
 const STATE_INCIAL = {
     correo: '',
@@ -23,6 +26,8 @@ const FormDiv = Styled.div`
         opacity: .8;
         border-radius: 25px;
     `;
+
+   
 
 const Login = () => {
 
@@ -37,31 +42,42 @@ const Login = () => {
 
     const {correo, password} = valores;
 
-    async function setLogin (){
-        
-        try {
-            
-           //await firebase.login(email, password);
-            const response = await clienteAxios.post('api/auth/login',valores);
-            console.log(response.data);
-            localStorage.setItem("tokenRecetas",response.data);
-            Router.push("/");
+    const dispatch = useDispatch();
+    const logearUsuario = () => dispatch(loginUsuarioAction(valores));
 
-            
-        } catch (error) {
-            console.log(error.message)
-            setError(error.message);
-        }
+    const mensaje = useSelector(state => state.auth.mensaje);
+    console.log(mensaje);
 
+
+    function setLogin(){
+        logearUsuario();
     }
 
+    // async function setLogin (){
+        
+    //     try {
+            
+    //        //await firebase.login(email, password);
+    //         const response = await clienteAxios.post('api/auth/login',valores);
+    //         console.log(response.data);
+    //         localStorage.setItem("tokenRecetas",response.data);
+    //         Router.push("/");
 
+            
+    //     } catch (error) {
+    //         console.log(error.message)
+    //         setError(error.message);
+    //     }
+
+    // }
 
     return ( 
         <Layout>
         <div className="container d-flex justify-content-center">
             <FormDiv className=" col-12 col-lg-5 col-md-10  py-3 px-4 ">
                 <form onSubmit={handleSubmit}>
+                    {mensaje
+                    ? <p className="alert alert-danger text-center">{mensaje}</p> : null}
                     <div className="form-group">
                         <label htmlFor="">Correo: </label>
                         <input type="text" className="form-control" placerholder="Ej: correo@gmail.com"
