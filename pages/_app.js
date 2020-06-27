@@ -1,30 +1,20 @@
 
-//import firebase, {FirebaseContext} from "../firebase/index"
-// import useAutenticacion from '../hooks/useAutenticacion'
-// import AuthContext from '../context/auth/authContext';
-// import AuthState from '../context/auth/authState'
-
-import App from 'next/app';
 import React from 'react';
-import withRedux from 'next-redux-wrapper'
 import {createWrapper} from 'next-redux-wrapper'
 import { Provider } from 'react-redux'
 import store from '../store'
 
 const MyApp = (props) => {
-    
         const {Component, pageProps} = props
         return(
             <Provider store={store} >
                 <Component {...pageProps}/>
             </Provider>
         )
-    
 }
 
 const makeStore =  () => store;
 const wrapper = createWrapper(makeStore);
-
 export default wrapper.withRedux(MyApp);
 
 // const MyApp = (props) => {

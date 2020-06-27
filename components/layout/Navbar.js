@@ -11,7 +11,7 @@ import {authUsuarioAction} from '../../actions/authActions';
 import {useDispatch, useSelector} from 'react-redux'
 
 
-const Navbar = () => {
+const Navbar = ({auth}) => {
     //style={{"background-color": "#e3f2fd", "color": "black"}}
     const [isLogin, setLogin] = useState(false);
     const [tipoBusqueda, setTipoBusqueda] = useState("receta");
@@ -27,6 +27,8 @@ const Navbar = () => {
     const usuarioRedux = useSelector(state => state.usuario);
     const autenticadoRedux = useSelector(state => state.autenticado);
     console.log(usuarioRedux);
+    console.log("AUTH");
+    console.log(auth);
    
    useEffect(() => {
         //authToken(localStorage.getItem('tokenRecetas'));
@@ -176,5 +178,7 @@ const Navbar = () => {
         </>
      );
 }
+
+
  
 export default Navbar;

@@ -27,13 +27,30 @@ const FormDiv = Styled.div`
         border-radius: 25px;
     `;
 
-   
+const fetchData = async () => {
+    try {
+        const token = localStorage.getItem("tokenRecetas");
+        console.log(token)
+        // if(token)
+        // {
+        //     //Funcion para asignar el token en el Header
+        //     console.log("Entroooo");
+        //     //await authToken(token);
+        // }
+        const response = await clienteAxios.post("http://localhost:4000/api/auth/", {token});
+        console.log(response.data.usuario);
+        return { auth: response }
+    } catch (error) {
+        // console.log(error.response.data.msg);
+        // return { auth: error.response.data.msg }
+    }
+}
 
 const Login = () => {
 
     // const usuario = useAutenticacion();
     // console.log(usuario);
-
+   
     
     const [error, setError] = useState(false);
 
@@ -110,5 +127,14 @@ const Login = () => {
         </Layout>
      );
 }
+
+
+
+// Login.getInitialProps = async (ctx) => {
+   
+//     // const res = await fetch('https://api.github.com/repos/vercel/next.js')
+//     // const json = await res.json()
+//     // return { auth: json.stargazers_count }
+//   }
  
 export default Login;
