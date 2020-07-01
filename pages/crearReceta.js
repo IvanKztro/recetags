@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Layout from '../components/layout/Layout';
 import styled from '@emotion/styled';
@@ -7,16 +7,37 @@ import useValidacion from '../hooks/useValidacion';
 import validarCrearReceta from '../validacion/validarCrearReceta'
 import Error from '../components/Error'
 
+//ACTIONS DE REDUX
+import {useDispatch, useSelector} from 'react-redux'
+
+ import Router, {useRouter} from 'next/router'
+
 const STATE_INICIAL = {
     titulo: '',
     descripcion: '',
     ingrediente: '',
   }
 
+    const FormDiv = styled.div`
+        background-color: black;
+        color: white;
+        opacity: .8;
+        border-radius: 5px;
+    `;
+
 const CrearReceta = () => {
+    let autenticadoRedux = useSelector(state => state.auth.autenticado);
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!autenticadoRedux)
+            Router.push('/');
+    
+    }, [])
 
     const Boton = styled.button`
         border: solid 1px #e3e3e3;
+        color:white;
     `;
 
 
@@ -97,10 +118,10 @@ const CrearReceta = () => {
     return ( 
         <Layout>
         <div className="container d-flex justify-content-center">
-            <div className="col-lg-7">
+            <FormDiv className="col-lg-7 py-3">
                 <form>
                     <div className="form-group">
-                        <label htmlFor="">Receta: </label>
+                        <label htmlFor="">Nombre receta: </label>
                         <input type="text" className="form-control"
                             onChange={handleChange}
                             value={titulo}
@@ -108,7 +129,7 @@ const CrearReceta = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="">Descripcion: </label>
+                        <label htmlFor="">Descripción: </label>
                         <input type="text" className="form-control"
                             onChange={handleChange}
                             value={descripcion}
@@ -168,7 +189,7 @@ const CrearReceta = () => {
                             
                     </div>
                 </form>
-            </div>
+            </FormDiv>
         </div>
         </Layout>
      );

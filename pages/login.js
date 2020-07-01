@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Layout from '../components/layout/Layout'
 import Error from '../components/Error'
 import Styled from '@emotion/styled'
@@ -6,15 +6,18 @@ import Styled from '@emotion/styled'
 import useValidacion from '../hooks/useValidacion';
 import validarLogin from '../validacion/validarLogin'
 
-import Router from 'next/router'
+
 import clienteAxios from '../config/axios';
 //import clienteAxios from 'axios';
 import tokenAuth from '../config/token'
 
 import useAutenticacion from '../hooks/useAutenticacion';
+//ACTIONS DE REDUX
 import {useDispatch, useSelector} from 'react-redux'
- //ACTIONS DE REDUX
+
  import {loginUsuarioAction} from '../actions/authActions'
+
+ import Router, {useRouter} from 'next/router'
 
 const STATE_INCIAL = {
     correo: '',
@@ -24,29 +27,24 @@ const FormDiv = Styled.div`
         background-color: black;
         color: white;
         opacity: .8;
-        border-radius: 25px;
+        border-radius: 5px;
     `;
 
-const fetchData = async () => {
-    try {
-        const token = localStorage.getItem("tokenRecetas");
-        console.log(token)
-        // if(token)
-        // {
-        //     //Funcion para asignar el token en el Header
-        //     console.log("Entroooo");
-        //     //await authToken(token);
-        // }
-        const response = await clienteAxios.post("http://localhost:4000/api/auth/", {token});
-        console.log(response.data.usuario);
-        return { auth: response }
-    } catch (error) {
-        // console.log(error.response.data.msg);
-        // return { auth: error.response.data.msg }
-    }
-}
+
 
 const Login = () => {
+    
+
+    let autenticadoRedux = useSelector(state => state.auth.autenticado);
+    const router = useRouter();
+
+    useEffect(() => {
+        if(autenticadoRedux)
+        {
+            router.push('/');
+        }
+    
+    }, [])
 
     // const usuario = useAutenticacion();
     // console.log(usuario);
@@ -63,7 +61,7 @@ const Login = () => {
     const logearUsuario = () => dispatch(loginUsuarioAction(valores));
 
     const mensaje = useSelector(state => state.auth.mensaje);
-    console.log(mensaje);
+    
 
 
     function setLogin(){
@@ -97,7 +95,8 @@ const Login = () => {
                     ? <p className="alert alert-danger text-center">{mensaje}</p> : null}
                     <div className="form-group">
                         <label htmlFor="">Correo: </label>
-                        <input type="text" className="form-control" placerholder="Ej: correo@gmail.com"
+                        <input type="text" className="form-control" 
+                            placeholder="Ej: correo@gmail.com"
                             name="correo" 
                             value={correo}
                             onChange={handleChange} 
@@ -110,7 +109,7 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Contaseña: </label>
-                        <input type="password" className="form-control" placerholder="Ej: ********"
+                        <input type="password" className="form-control" placeholder="Ej: ********"
                             name="password"  
                             value={password}
                             onChange={handleChange}

@@ -34,8 +34,7 @@ export default function (state = initialState, action){
                 ...state,
                 cargando: false,
                 autenticado: false,
-                usuario: null,
-                mensaje: "Usuario no autenticado"
+                usuario: null
             }
         case LOGIN_LOADING:
             return{

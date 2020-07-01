@@ -1,6 +1,10 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Layout from '../components/layout/Layout'
 import Styled from '@emotion/styled'
+import Router, {useRouter} from 'next/router'   
+ 
+//ACTIONS DE REDUX
+import {useDispatch, useSelector} from 'react-redux'
 
 const Registro = () => {
 
@@ -8,8 +12,18 @@ const Registro = () => {
         background-color: black;
         color: white;
         opacity: .8;
-        border-radius: 25px;
+        border-radius: 5px;
     `;
+    let autenticadoRedux = useSelector(state => state.auth.autenticado);
+    const router = useRouter();
+
+    useEffect(() => {
+        if(autenticadoRedux)
+        {
+            router.push('/');
+        }
+    
+    }, [])
     return ( 
         <Layout>
         <div className="container d-flex justify-content-center">
@@ -17,23 +31,23 @@ const Registro = () => {
                 <form>
                     <div className="form-group">
                         <label htmlFor="">Nombre: </label>
-                        <input type="text" className="form-control" placerholder="Ej: Pedro"/>
+                        <input type="text" className="form-control" placeholder="Ej: Pedro"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Apellidos: </label>
-                        <input type="text" className="form-control" placerholder="Ej: Mendez"/>
+                        <input type="text" className="form-control" placeholder="Ej: Mendez"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Correo: </label>
-                        <input type="text" className="form-control" placerholder="Ej: correo@gmail.com"/>
+                        <input type="text" className="form-control" placeholder="Ej: correo@gmail.com"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Contaseña: </label>
-                        <input type="password" className="form-control" placerholder="Ej: ********"/>
+                        <input type="password" className="form-control" placeholder="Ej: ********"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Repetir contraseña: </label>
-                        <input type="password" className="form-control" placerholder="Ej: ********"/>
+                        <input type="password" className="form-control" placeholder="Ej: ********"/>
                     </div>
                     <button className="btn btn-sm btn-success form-control">Registrarse</button>
                 </form>

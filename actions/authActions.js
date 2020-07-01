@@ -21,7 +21,7 @@ export function authUsuarioAction(){
             //     //await authToken(token);
             // }
             const response = await clienteAxios.post("http://localhost:4000/api/auth/", {token});
-            console.log(response.data.usuario);
+           // console.log(response.data.usuario);
             dispatch(validacionExitosa(response.data.usuario));
         } catch (error) {
             console.log(error.response.data.msg);
@@ -36,7 +36,7 @@ export function loginUsuarioAction (valores){
         try {
            // console.log(valores);
             const response = await clienteAxios.post('http://localhost:4000/api/auth/login',valores);
-            console.log(response.data);
+            //console.log(response.data);
             dispatch(loginExitoso(response.data));
             localStorage.setItem("tokenRecetas",response.data.password);
             //Router.push("/");
