@@ -1,32 +1,50 @@
-import React, {useEffect} from 'react';
-import Layout from '../components/layout/Layout'
+import Head from 'next/head'
 
-//ACTIONS DE REDUX
+
+import Layout from '../components/layout/Layout'
+import Receta from '../components/layout/InfoReceta'
+import NavbarSearch from '../components/layout/NavbarSearch'
+
+//REACT
+import React, {useEffect} from 'react'
+
+//REDUX
 import {useDispatch, useSelector} from 'react-redux'
- import Router, { useRouter } from 'next/router'
+import {obtenerRecetasFavAction} from '../actions/recetasActions';
 
 const Favoritos = () => {
 
-    let autenticadoRedux = useSelector(state => state.auth.autenticado);
-    const router = useRouter()
-    
-    useEffect(() => {
-        if(!autenticadoRedux)
-            Router.push('/');
-    
-    }, [])
-    
+  //let listaRecetasRedux = useSelector
+  const recetas = useSelector(state => state.recetas.recetasFav);
+  const usuario = useSelector(state => state.auth.usuario);
+  
 
-    // if(!autenticadoRedux)
-    //          Router.push('/');
-            //location.href = "http://localhost:3000/";
-    return ( 
-        <>
-            <Layout>
-                <p>Favoritos</p>
-            </Layout>
-        </>
-     );
+  const dispatch = useDispatch();
+
+
+
+  useEffect(() => {
+    const getRecetas = () => dispatch(obtenerRecetasFavAction(usuario));
+    getRecetas();
+  }, [])
+  
+  return (
+    
+      <Layout>
+        <div className="mx-3 my-2 row">
+          {
+             recetas.length != 0
+             ? 
+               recetas.map(receta => (
+                 <Receta
+                   key ={receta._id}
+                   receta = {receta}
+                 />
+               ))
+             : <h3 class="text-center">No cuenta con recetas favoritas</h3>
+          }
+        </div>
+      </Layout>
+  )
 }
- 
 export default Favoritos;

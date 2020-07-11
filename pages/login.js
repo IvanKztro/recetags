@@ -51,40 +51,26 @@ const Login = () => {
    
     
     const [error, setError] = useState(false);
-
     const {valores, errores, submitForm, handleSubmit, handleChange} = useValidacion
     (STATE_INCIAL, validarLogin, setLogin);
-
-    const {correo, password} = valores;
-
-    const dispatch = useDispatch();
-    const logearUsuario = () => dispatch(loginUsuarioAction(valores));
-
-    const mensaje = useSelector(state => state.auth.mensaje);
     
-
+    const {correo, password} = valores;
 
     function setLogin(){
         logearUsuario();
     }
 
-    // async function setLogin (){
-        
-    //     try {
-            
-    //        //await firebase.login(email, password);
-    //         const response = await clienteAxios.post('api/auth/login',valores);
-    //         console.log(response.data);
-    //         localStorage.setItem("tokenRecetas",response.data);
-    //         Router.push("/");
 
-            
-    //     } catch (error) {
-    //         console.log(error.message)
-    //         setError(error.message);
-    //     }
+    //Redux
+    const dispatch = useDispatch();
+    const logearUsuario = () => dispatch(loginUsuarioAction(valores));
+    const mensaje = useSelector(state => state.auth.mensaje);
+    
 
-    // }
+
+    
+
+   
 
     return ( 
         <Layout>

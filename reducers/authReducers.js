@@ -34,7 +34,8 @@ export default function (state = initialState, action){
                 ...state,
                 cargando: false,
                 autenticado: false,
-                usuario: null
+                usuario: null,
+                token: null
             }
         case LOGIN_LOADING:
             return{

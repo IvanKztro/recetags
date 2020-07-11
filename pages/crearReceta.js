@@ -3,12 +3,17 @@ import React, {useState, useEffect} from 'react';
 import Layout from '../components/layout/Layout';
 import styled from '@emotion/styled';
 
+import FormReceta1 from '../components/formReceta/formReceta1'
+
 import useValidacion from '../hooks/useValidacion';
 import validarCrearReceta from '../validacion/validarCrearReceta'
 import Error from '../components/Error'
 
-//ACTIONS DE REDUX
+//ACTIONS DE REDUX RECETAS
 import {useDispatch, useSelector} from 'react-redux'
+import {crearRecetaAction} from '../actions/recetasActions'
+//ACTIONS DE REDUX AUTENTICACION
+import {authUsuarioAction} from '../actions/authActions'
 
  import Router, {useRouter} from 'next/router'
 
@@ -24,9 +29,12 @@ const STATE_INICIAL = {
         opacity: .8;
         border-radius: 5px;
     `;
+    
 
 const CrearReceta = () => {
     let autenticadoRedux = useSelector(state => state.auth.autenticado);
+    let usuario = useSelector(state => state.auth.usuario);
+   // console.log(usuario);
     const router = useRouter();
 
     useEffect(() => {
@@ -35,79 +43,102 @@ const CrearReceta = () => {
     
     }, [])
 
-    const Boton = styled.button`
-        border: solid 1px #e3e3e3;
-        color:white;
-    `;
-
-
+    
+    //VALIDACION (HOOK Y USEVALDACION)
     const { valores, errores, handleSubmit, handleChange, handleBlur } = 
     useValidacion(STATE_INICIAL, validarCrearReceta, crearReceta);
+    let { titulo, descripcion } = valores;
 
-    const { titulo, descripcion } = valores;
+    //STATE DE LA PAGINA
     const [ingredientes, setIngredientes] = useState({cantidad: '', ingrediente:'' });
     const [isIngrediente, setIsIngrediente] = useState(false);
     const [listaIngredientes, setListaIngredientes] = useState([]);
+    const [estadoFormulario, setEstadoFormulario] = useState(1);
+    const [receta, setReceta] = useState({});
+
+    const [isReadyForm, setReadyForm] = useState(false);
+    const [error, setError] = useState(null);
+    let boton ="";
+    let color = "";
     
+    if(estadoFormulario == 2)
+    {
+        boton = "Crear";
+        color = "btn-success"
+    }
+    else{
+        boton = "Siguiente";
+        color = "btn-primary"
+    }
 
 
     //boton para agregar ingredientes
-
     const {cantidad, ingrediente} =ingredientes;
 
-    const agregarIngrediente = e =>{
-        if(ingredientes.cantidad.trim() == '' || ingredientes.ingrediente.trim() == '')
-            return setIsIngrediente(true);
+    
 
-        setIsIngrediente(false);
-        console.log(ingrediente);
+    const siguienteForm = ()=>{
 
-        setListaIngredientes([
-            ...listaIngredientes,
-            ingrediente
-        ]);
-        ingredientes.cantidad= ''
-        ingredientes.ingrediente=''
+        if(estadoFormulario == 1)
+        {
+            if(titulo.trim() === "" || descripcion.trim() === "" )                
+                return setError("Ingrese todos los campos");
 
+        }else if(estadoFormulario == 2)
+        {
+            if(listaIngredientes.length == 0)
+                return setError("Debe ingresar algun ingrediente");
+            
+           return crearReceta();
+        }
+        setError(null);
+        const cont = estadoFormulario + 1;
+        setEstadoFormulario(cont);
+        setReadyForm(false);
     }
+    
 
-    const eliminarIngrediente = (ingrediente) => {
-        const nuevaLista = listaIngredientes.filter(ingre =>(
-            ingre != ingrediente
-        ));
-        setListaIngredientes(nuevaLista);
-        //console.log(nuevaLista);
-    }
+    const dispatch = useDispatch();
+
+    const crearNuevaReceta = (nuevaRecetaRedux) => dispatch(crearRecetaAction(nuevaRecetaRedux));
+    const autenticacion = () => dispatch(authUsuarioAction());
+
     
 
     async function crearReceta() {
 
-        // si el usuario no esta autenticado llevar al login
-        // if(!usuario) {
-        //   return router.push('/login');
-        // }
-    
-        // crear el objeto de nuevo producto 
-        const producto = {
-            titulo, 
-            descripcion,
-            creado: Date.now(), 
-            creador: {
-                id: usuario.uid,
-                nombre: "usuario.displayName"
-            },
-            imagen: "jshdsd",
-            votos: 0,
-            votantes: [],
-            comentarios: [],
+        const nuevaRecetaRedux = {
+            titulo: titulo,  
+            descripcion: descripcion,
+            // creador: {
+            //     id: usuario._id,
+            //     nombre: `${usuario.nombre} ${usuario.apellidos}`,
+            //     correo: usuario.correo
+            // },
+            imagen: "noImagen",
+            ingredientes: listaIngredientes
         }
+        //MANDAR A LLAMAR AL METODO DE REDUX
+
+        //primero se autentica al usuario
+        //await autenticacion();
+        //crear la receta
+        crearNuevaReceta(nuevaRecetaRedux);   
+        
+        //RESET DE FORMULARIO
+        setError(null);
+        setEstadoFormulario(1);
+        titulo =""
+        descripcion =""
+        setListaIngredientes([]);
+        Router.push("/");
+        
+        
+        
+
+        
     
-        // insertarlo en la base de datos
-        //firebase.db.collection('productos').add(producto);
-    
-        //return router.push('/');
-    
-      }
+    }
 
 
     
@@ -119,76 +150,82 @@ const CrearReceta = () => {
         <Layout>
         <div className="container d-flex justify-content-center">
             <FormDiv className="col-lg-7 py-3">
-                <form>
-                    <div className="form-group">
-                        <label htmlFor="">Nombre receta: </label>
-                        <input type="text" className="form-control"
-                            onChange={handleChange}
-                            value={titulo}
-                            name = "titulo"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="">Descripción: </label>
-                        <input type="text" className="form-control"
-                            onChange={handleChange}
-                            value={descripcion}
-                            name = "descripcion"
-                        />
-                    </div>
-                    <div className="form-group">
-                        
-                        <input type="file" className=""
-                            
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="">ingrediente: </label>
-                        <div className="d-flex">
-                        <input type="text" className="form-control col-2 col-lg-1"
-                        placeholder="2"
-                        onChange={ e => setIngredientes({...ingredientes,[e.target.name]: e.target.value})}
-                        value={cantidad}
-                        name = "cantidad"
-                    />
-                        <input type="text" className="form-control"
-                            placeholder="cucharadas de sal"
-                            onChange={ e => setIngredientes({...ingredientes,[e.target.name]: e.target.value})}
-                            value={ingrediente}
-                            name = "ingrediente"
-                        />
-                        <button type="button" 
-                            className="btn btn-sm btn-primary"
-                            onClick={agregarIngrediente}
-                        >Agregar</button>
-                        </div>
-                    </div>
+                <form onSubmit={crearReceta}>
                     {
-                        isIngrediente
-                        ?<Error
-                            error ="Falta un campo (ingrediente o cantidad)"
-                        />
-                        : null
-                    }
-                    <div>
-                        {
-                            listaIngredientes.length == 0
-                            ? <p>No hay ingredientes agregados</p>
-                            :
-                            listaIngredientes.map( (ingre, index) =>(
-                                <Boton
-                                    type ="button" key={index} className="btn  mt-3"
-                                    onClick={ ()=> eliminarIngrediente(ingre)}>
-                                    {ingre} &times;
-                                </Boton>
-    ))
-                            
+                        error
+                        ?<Error error={error}></Error>:null
 
-                        }
-                        
-                            
-                    </div>
+                    }
+                {
+                    estadoFormulario === 1
+                    ?
+                    (
+                       <>
+                            <div className="form-group">
+                                <label htmlFor="">Nombre receta: </label>
+                                <input type="text" className="form-control"
+                                    onChange={handleChange}
+                                    value={titulo}
+                                    name = "titulo"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="">Descripción: </label>
+                                <input type="text" className="form-control"
+                                    onChange={handleChange}
+                                    value={descripcion}
+                                    name = "descripcion"
+                                />
+                            </div>
+                            <div className="form-group">
+                                
+                                <input type="file" className=""
+                                    
+                                />
+                            </div>
+                       </>
+                    )
+                    : null
+                } 
+                {
+                    estadoFormulario === 2
+                    ?
+                    (
+                        <FormReceta1
+                            cantidad={cantidad}
+                            ingrediente = {ingrediente}
+
+                            isIngrediente={isIngrediente}
+                            listaIngredientes={listaIngredientes}
+                            ingredientes={ingredientes}
+
+                            setIngredientes={setIngredientes}
+                            setIsIngrediente={setIsIngrediente}
+                            setListaIngredientes={setListaIngredientes}
+                        />
+                    ): null
+                } 
                 </form>
+                <div className="d-flex justify-content-between">
+                {
+                    (estadoFormulario > 1)
+                    ?
+                    <button 
+                        type="button" 
+                        className= "btn btn-primary" 
+                        onClick={ () =>{ setEstadoFormulario(estadoFormulario - 1)} }
+                    
+                    >Anterior</button>
+                    :
+                    null
+                }
+                <button 
+                    type="button" 
+                    className={"btn " +color}
+                    onClick={siguienteForm}
+                
+            >{boton}</button>
+                </div>
             </FormDiv>
         </div>
         </Layout>

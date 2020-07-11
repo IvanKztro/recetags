@@ -20,7 +20,10 @@ export function authUsuarioAction(){
             //     console.log("Entroooo");
             //     //await authToken(token);
             // }
-            const response = await clienteAxios.post("http://localhost:4000/api/auth/", {token});
+            clienteAxios.defaults.headers.common['x-auth-token'] = token;
+            //console.log("token en actions")
+            console.log(clienteAxios.defaults.headers.common['x-auth-token']);
+            const response = await clienteAxios.get("http://localhost:4000/api/auth/");
            // console.log(response.data.usuario);
             dispatch(validacionExitosa(response.data.usuario));
         } catch (error) {

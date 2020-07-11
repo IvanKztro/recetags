@@ -1,7 +1,16 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const InfoReceta = ({receta}) => {
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { es } from 'date-fns/locale';
+import Link from 'next/link'
+
+//REDUX
+import {useDispatch, useSelector} from 'react-redux'
+
+import {agregarRecetaFavAction} from '../../actions/recetasActions';
+
+const InfoReceta = ({receta, usuario}) => {
     const Receta = styled.div`
         background-color: black;
         color: white;
@@ -42,11 +51,30 @@ const InfoReceta = ({receta}) => {
         }
     `;
 
+    const Fecha = styled.p`
+        font-size: 14px;
+        font-weight: bold;
+    `;
+
     const Comentarios = styled.div`
-        
+    
         .datos{
             font-size: 14px;
+            p{
+                margin-left: 5px;
+            }
         }
+        .fa-heart{
+            color: red;
+            font-size: 18px;
+        }
+        
+        .fa-comment{
+            color: blue;
+            font-size: 18px;
+        }
+        
+        
     `;
 
     const Votos = styled.div`
@@ -54,21 +82,36 @@ const InfoReceta = ({receta}) => {
         text-align: center;
     `;
 
-    /*
+
+    //REDUX data
     
-    idReceta: 2, 
-      nombre: "Pozole", 
-      descripcion: "Pozole de rancho, no es el pozole tipico de cuidad",
-      creador: 2,
-      creado: "hace 5 dias",
-      foto: "",
-      votos: 12,
-      haVotado: [12,21,13,42],
-      comentarios:[
-        { byUserID: 3, nombre: "Ruben", correo: "ruben@gmail.com", comentario: "No sabia sobre este platillo pero esta rico"}
-      ]
+   // console.log(usuario);
+    if(!usuario)
+    {
+        //console.log("no hay usuario logeado");
+        usuario= {
+            correo: "0000000000"
+        }
+    }
+        
+        
+
+    //REDUX Actions
+    const dispatch = useDispatch();
+
+    const agregarFavAction = (idReceta) => dispatch(agregarRecetaFavAction(usuario, idReceta));
     
-    */
+
+    //FUNCION DE AGREGAR FAV
+
+    //agregarRecetaFavAction
+    async function agregarFav (receta){
+        console.log(receta);
+        agregarFavAction(receta._id);
+    }
+
+
+    
     return ( 
     //     <Receta className="container mt-4">
     //         <Descripcion>
@@ -85,31 +128,35 @@ const InfoReceta = ({receta}) => {
     //             </Comentarios>
     //             </div>
     //         </Descripcion>
-            
-    //         <Votos>
-    //             {/* <div>&#9650;</div> */}
-    //             <div><i className="fas fa-thumbs-up"></i></div>
-    //             <p>{receta.likes}</p>
-    //         </Votos>
-
-    //   </Receta>
-    //style="width: 18rem;"
+    
     <div className="card col-12 col-md-4 col-lg-3 mb-2" >
-        <Imagen className="" src={receta.foto} alt="Card image cap"/>
-        <div className="card-body">
-            <h5 className="card-title">{receta.nombre}</h5>
+        <Imagen className="" src={receta.imagen} alt={receta.titulo}/>
+        <Fecha>Publicado hace: {formatDistanceToNow(new Date(receta.creado), {locale: es})}</Fecha>
+        <div className="card-body" >
+            <h5 className="card-title">{receta.titulo}</h5>
             <p className="card-text">{receta.descripcion}</p>
 
             <Comentarios>
-                <div className="row datos aria-hidden">
-                    <div className="col-3 "><i  aria-hidden className="fas fa-comment"></i>C {receta.comentarios.length} </div>
-                    <div className="col-4 "><i  aria-hidden className="fas fa-thumbs-up"></i>L {receta.likes}</div>
-                    <div className="col-5 "><i  aria-hidden className="far fa-heart"></i> Fav</div>
+                <div className="row  datos aria-hidden">
+                    <div className="col-6 d-flex"><i  aria-hidden className="far fa-comment"></i><p>{receta.comentarios.length}</p></div>
+                    
+                    {
+                        receta.votantes.includes(usuario.correo)
+                        ?
+                        <div className="col-6 d-flex"><i  aria-hidden className="fas fa-heart" onClick={()=> agregarFav(receta)}></i><p>{receta.votantes.length}</p></div>
+                        :
+                        <div className="col-6 d-flex"><i  aria-hidden className="far fa-heart" onClick={()=> agregarFav(receta)}></i><p>{receta.votantes.length}</p></div>
+
+                    }
+                    {/* <div className="col-5 "><i  aria-hidden className="far fa-heart"></i> Fav</div> */}
                     
                     {/* <i class="far fa-bookmark"></i> Guardar */}
                     
                 </div>
-                <a href="#" className="btn btn-primary form-control">Ingredientes</a>
+                <Link  href='/recetas/[id]' as={`/recetas/${receta._id}`}>
+                    <button className="btn btn-primary form-control">Más información</button> 
+                </Link>
+                
             </Comentarios>
         </div>
     </div>
