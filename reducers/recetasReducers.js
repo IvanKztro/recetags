@@ -103,6 +103,12 @@ export default function (state = initialState, action){
                 cargando: false,
 
             }
+        
+        // case ELIMINAR_RECETA_EXITO:
+        //     return{
+        //         ...state,
+        //         recetas: state.recetas.filter(receta =>(receta._id !== action.payload))
+        //     }
 
         default: 
             return state

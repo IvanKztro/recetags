@@ -37,7 +37,18 @@ const CrearReceta = () => {
    // console.log(usuario);
     const router = useRouter();
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
+        
+        const getAutenticacion = async() =>  await dispatch(authUsuarioAction());
+        getAutenticacion();
+
+        console.log(usuario)
+        console.log(autenticadoRedux)
+
+
+        
         if(!autenticadoRedux)
             Router.push('/');
     
@@ -98,7 +109,7 @@ const CrearReceta = () => {
     }
     
 
-    const dispatch = useDispatch();
+    
 
     const crearNuevaReceta = (nuevaRecetaRedux) => dispatch(crearRecetaAction(nuevaRecetaRedux));
     const autenticacion = () => dispatch(authUsuarioAction());

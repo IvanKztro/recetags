@@ -24,9 +24,10 @@ const Favoritos = () => {
 
 
   useEffect(() => {
+    console.log(usuario);
     const getRecetas = () => dispatch(obtenerRecetasFavAction(usuario));
     getRecetas();
-  }, [])
+  }, [usuario])
   
   return (
     
@@ -41,7 +42,7 @@ const Favoritos = () => {
                    receta = {receta}
                  />
                ))
-             : <h3 class="text-center">No cuenta con recetas favoritas</h3>
+             : <h3 className="text-center">No cuenta con recetas favoritas</h3>
           }
         </div>
       </Layout>

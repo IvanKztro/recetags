@@ -51,6 +51,7 @@ const Receta = () => {
 
     const router = useRouter();
     const {query: {id}} = router;
+    console.log("sdsdsds22222");
     console.log(id);
     
     
@@ -60,17 +61,19 @@ const Receta = () => {
         
     const receta = useSelector(state => state.recetas.recetaSelect);
     const usuario = useSelector(state => state.auth.usuario);
+    console.log("receta");
+    console.log(receta);
     
     const {titulo, descripcion, imagen, ingredientes, comentarios, creado, votantes, _id, creador, } = receta
-
-
    
-
+    
     useEffect(() => {
+        console.log("effect");
         const getRecetaById = () => dispatch(ObtenerRecetaIdAction(id));
-        console.log("Effect ejecuandose");
         getRecetaById();
-    }, [id])
+    }, [])
+
+    
 
     const puedeBorrar = () =>{
         if(!usuario)
@@ -89,7 +92,7 @@ const Receta = () => {
     const eliminarRecetaA = () => dispatch(eliminarRecetaAction(receta._id))
 
     const eliminarReceta = () =>{
-        console.log(receta._id);
+        eliminarRecetaA();
 
     }
 

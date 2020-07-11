@@ -198,7 +198,7 @@ const obtenerRecetaIdErrorReducer = (msg) =>({
 
 
 export function eliminarRecetaAction(id){
-
+    console.log("ELIMINADO RECETA POR ID");
     return async(dispatch) => {
 
         dispatch(eliminandoRecetaReducer());
@@ -206,8 +206,8 @@ export function eliminarRecetaAction(id){
         try {
                                                         
             const response = await clienteAxios.delete(`/api/recetas/eliminarReceta/${id}`);
-            console.log(response.data);
-            dispatch(eliminarRecetaExitoReducer(response.data));
+            console.log(response.data._id);
+            //dispatch(eliminarRecetaExitoReducer(response.data._id));
         } catch (error) {
             console.log(error.response);
             dispatch(eliminarRecetaErrorReducer("No se pudo eliminar la receta"));
@@ -221,9 +221,9 @@ const eliminandoRecetaReducer = () => ({
     type: ELIMINANDO_RECETA
 })
 
-const eliminarRecetaExitoReducer = (receta) => ({
+const eliminarRecetaExitoReducer = (idReceta) => ({
     type: ELIMINAR_RECETA_EXITO,
-    payload: receta
+    payload: idReceta
 });
 
 const eliminarRecetaErrorReducer = (msg) => ({
