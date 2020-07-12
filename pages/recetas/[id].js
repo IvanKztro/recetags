@@ -1,8 +1,8 @@
 //REACT
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useRouter, Router} from 'next/router';
 import {useDispatch, useSelector} from 'react-redux'
-import {ObtenerRecetaIdAction, eliminarRecetaAction} from '../../actions/recetasActions'
+import {ObtenerRecetaIdAction, eliminarRecetaAction, agregarComentarioAction} from '../../actions/recetasActions'
 import Layout from '../../components/layout/Layout'
 
 import styled from '@emotion/styled';
@@ -49,57 +49,88 @@ const Creador = styled.small`
 
 const Receta = () => {
 
-    const router = useRouter();
-    const {query: {id}} = router;
-    console.log("sdsdsds22222");
-    console.log(id);
-    
-    
-    //Redux
-    const dispatch = useDispatch();
-    
-        
-    const receta = useSelector(state => state.recetas.recetaSelect);
-    const usuario = useSelector(state => state.auth.usuario);
-    console.log("receta");
-    console.log(receta);
-    
-    const {titulo, descripcion, imagen, ingredientes, comentarios, creado, votantes, _id, creador, } = receta
-   
-    
     useEffect(() => {
         console.log("effect");
         const getRecetaById = () => dispatch(ObtenerRecetaIdAction(id));
         getRecetaById();
-    }, [])
+    },[])
 
+    const router = useRouter();
+    const {query: {id}} = router;
+    // console.log("sdsdsds22222");
+    // console.log(id);
     
 
-    const puedeBorrar = () =>{
-        if(!usuario)
-            return false
+  
+    
+    //Redux
+    const dispatch = useDispatch();
 
-        if(creador.id === usuario._id)
-            return true
-    }
+    
+    
+        
+    const receta = useSelector(state => state.recetas.recetaSelect);
+    const usuario = useSelector(state => state.auth.usuario);
+    // console.log("receta");
+    // console.log(receta);
 
-    const esCreador = (idUsuariobyComentario) =>{
+    const [comentario, setComentario] = useState( { idReceta: id } );
+    const [error, setError] = useState(null);
 
-        if(idUsuariobyComentario === creador.id)
-            return true
-    }
 
-    const eliminarRecetaA = () => dispatch(eliminarRecetaAction(receta._id))
+    if(!receta || Object.keys(receta).length === 0)  return 'Cargando...';
+        const {titulo, descripcion, imagen, ingredientes, comentarios, creado, votantes, _id, creador, } = receta
+        const puedeBorrar = () =>{
+            if(!usuario)
+                return false
 
-    const eliminarReceta = () =>{
-        eliminarRecetaA();
+            if(creador.id === usuario._id)
+                return true
+        }
 
-    }
+        const esCreador = (correoUsuariobyComentario) =>{
+
+            if(correoUsuariobyComentario === creador.correo)
+                return true
+        }
+
+        const eliminarRecetaA = () => dispatch(eliminarRecetaAction(receta._id))
+
+        const eliminarReceta = () =>{
+            eliminarRecetaA();
+            router.push('/');
+
+        }
+
+        const agregarComentario = () => dispatch(agregarComentarioAction(comentario));
+
+         const submitComentario = (e) =>{
+            e.preventDefault();
+            if(comentario.comentario.trim() == "")
+                return setError("Debe ingresar un comentario");
+            
+            setError(null);
+            console.log(comentario);
+            agregarComentario();
+            
+         }
+
+         const changeComentario = (e) =>{
+            //console.log(e.target.value);
+            setComentario({
+                ...comentario,
+                [e.target.name]: e.target.value
+            });    
+        }
+    
+    
 
     return ( 
         <Layout>
             
-            <div>
+            {
+                receta ?
+                <div>
             { puedeBorrar() &&  
                 <div className="pl-3">
                     <button
@@ -153,16 +184,17 @@ const Receta = () => {
                                 {
                                     usuario &&
                                     (<>
+                                        {error? <p className="alert alert-danger">{error}</p>:null}
                                         <h4>Agrega un comentario</h4>
                                         <div>
-                                            <form id="formComentario"  >
+                                            <form id="formComentario" onSubmit={submitComentario} >
                                                 <div className="form-group">
                                                     <textarea 
                                                         placeholder="agrega tu comentario aqui"
                                                         className="form-control"
-                                                        id="mensaje"
-                                                        name="mensaje"
-                                                        // onChange={changeComentario}
+                                                        id="comentario"
+                                                        name="comentario"
+                                                        onChange={changeComentario}
                                                         />
                                                 </div>
                                                 <button className="btn btn-primary btn-sm form-control">Agregar Comentario</button>
@@ -178,19 +210,34 @@ const Receta = () => {
                                             key={index}
                                             className="mb-2"
                                         >
-                                            {esCreador( comentario.idUsuario )
+                                            {esCreador( comentario.correo )
                                                 ?
                                                 <Usuario className="">
-                                                    <span>{comentario.nombreUsuario}
+                                                    <span>{comentario.nombre}
                                                         <Creador className="badge">creador</Creador>
                                                     </span>
+                                                    {
+                                                        comentario.fechaPublicacion ?
+                                                        <p>
+                                                            hace: {formatDistanceToNow(new Date(comentario.fechaPublicacion), {locale: es})}
+                                                        </p>
+                                                        : null
+                                                    }
                                                 </Usuario>
                                                 :
                                                 <Usuario className="">
-                                                    <span>{comentario.nombreUsuario}</span>
+                                                    <span>{comentario.nombre}</span>
+                                                    {
+                                                        comentario.fechaPublicacion ?
+                                                        <p>
+                                                            hace: {formatDistanceToNow(new Date(comentario.fechaPublicacion), {locale: es})}
+                                                        </p>
+                                                        : null
+                                                    }
                                                 </Usuario>
                                             }
-                                            <p className="ml-3">{comentario.mensaje}</p>
+                                            <p className="ml-3">{comentario.comentario}</p>
+                                            
                                             
                                         </Comentario>
                                     ))}
@@ -216,7 +263,10 @@ const Receta = () => {
                         
                     </div>
                 
-            </div> 
+            </div>
+            :null
+
+            } 
         </Layout>
      );
 }

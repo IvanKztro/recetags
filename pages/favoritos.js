@@ -24,7 +24,6 @@ const Favoritos = () => {
 
 
   useEffect(() => {
-    console.log(usuario);
     const getRecetas = () => dispatch(obtenerRecetasFavAction(usuario));
     getRecetas();
   }, [usuario])

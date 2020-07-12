@@ -4,7 +4,8 @@ import {
     OBTENIENDO_RECETASFAV, OBTENER_RECETASFAV_EXITO, OBTENER_RECETASFAV_ERROR,
     AGREGANDO_RECETAFAV, AGREGAR_RECETAFAV_EXITO, AGREGAR_RECETAFAV_ERROR,
     OBTENIENDO_RECETAID, OBTENER_RECETAID_EXITO, OBTENER_RECETAID_ERROR,
-    ELIMINANDO_RECETA, ELIMINAR_RECETA_EXITO, ELIMINAR_RECETA_ERROR
+    ELIMINANDO_RECETA, ELIMINAR_RECETA_EXITO, ELIMINAR_RECETA_ERROR,
+    AGREGANDO_COMENTARIO, AGREGAR_COMENTARIO_EXITO, AGREGAR_COMENTARIO_ERROR
 } from '../types/index'
 
 import clienteAxios from '../config/axios';
@@ -129,6 +130,9 @@ const obtenerRecetasFavErrorReducer = (msg) => ({
 
 export function agregarRecetaFavAction(usuario, idReceta){
     return async (dispatch) => {
+        console.log("EN AGREGAR FAV DESDE ACTIONS")
+        console.log(usuario)
+        console.log(idReceta)
 
         dispatch(agregandoRecetaFavReducer());
         try {
@@ -207,7 +211,7 @@ export function eliminarRecetaAction(id){
                                                         
             const response = await clienteAxios.delete(`/api/recetas/eliminarReceta/${id}`);
             console.log(response.data._id);
-            //dispatch(eliminarRecetaExitoReducer(response.data._id));
+            dispatch(eliminarRecetaExitoReducer(response.data._id));
         } catch (error) {
             console.log(error.response);
             dispatch(eliminarRecetaErrorReducer("No se pudo eliminar la receta"));
@@ -229,4 +233,29 @@ const eliminarRecetaExitoReducer = (idReceta) => ({
 const eliminarRecetaErrorReducer = (msg) => ({
     type: ELIMINAR_RECETA_ERROR,
     payload: msg
+})
+
+export function agregarComentarioAction (comentario){
+
+    return async (dispatch) =>{
+        dispatch(agregandoComentarioReducer());
+
+        try {
+            const response = await clienteAxios.put("/api/recetas/agregarComentario",comentario);
+            console.log(response.data);
+            //dispatch(agregarComentarioExitoReducer(response.data));
+        } catch (error) {
+            console.log(error.response);
+        }
+
+    }
+}
+
+const agregandoComentarioReducer = () =>({
+    type: AGREGANDO_COMENTARIO,
+});
+
+const agregarComentarioExitoReducer = (comentario) => ({
+    type: AGREGAR_COMENTARIO_EXITO,
+    payload: comentario
 })
