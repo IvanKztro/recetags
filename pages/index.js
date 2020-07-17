@@ -48,6 +48,21 @@ export default function Home() {
 
   // console.log(newLista);
 
+ /* 
+    {
+      idReceta: 2, 
+      nombre: "Pozole", 
+      descripcion: "Pozole de rancho, no es el pozole tipico de cuidad",
+      creador: 2,
+      creado: "hace 5 dias",
+      foto: "https://www.mylatinatable.com/wp-content/uploads/2016/03/pozole-5-1024x681-1.jpg",
+      likes: 45,
+      hanLiked: [12,21,13,42],
+      comentarios:[
+        { byUserID: 3, nombre: "Ruben", correo: "ruben@gmail.com", comentario: "No sabia sobre este platillo pero esta rico"}
+      ]
+    }*/
+
   
   return (
     

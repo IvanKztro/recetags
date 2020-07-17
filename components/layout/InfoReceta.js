@@ -134,7 +134,7 @@ const InfoReceta = ({receta, usuario}) => {
         <Fecha>Publicado hace: {formatDistanceToNow(new Date(receta.creado), {locale: es})}</Fecha>
         <div className="card-body" >
             <h5 className="card-title">{receta.titulo}</h5>
-            {/* <p className="card-text">{receta.descripcion}</p> */}
+            <p className="card-text">{receta.descripcion}</p>
 
             <Comentarios>
                 <div className="row  datos aria-hidden">
