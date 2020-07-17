@@ -49,14 +49,24 @@ const Creador = styled.small`
 
 const Receta = () => {
 
-    useEffect(() => {
-        console.log("effect");
-        const getRecetaById = () => dispatch(ObtenerRecetaIdAction(id));
-        getRecetaById();
-    },[])
-
+    const receta = useSelector(state => state.recetas.recetaSelect) || null;
+    const usuario = useSelector(state => state.auth.usuario);
     const router = useRouter();
     const {query: {id}} = router;
+    
+    //USESTATE
+    const [comentario, setComentario] = useState( { idReceta: id } );
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        
+        const getRecetaById = () => dispatch(ObtenerRecetaIdAction(id));
+        getRecetaById();
+
+        setComentario({ idReceta: id, comentario: "" });
+    },[id])
+
+    
     // console.log("sdsdsds22222");
     // console.log(id);
     
@@ -69,14 +79,13 @@ const Receta = () => {
     
     
         
-    const receta = useSelector(state => state.recetas.recetaSelect);
-    const usuario = useSelector(state => state.auth.usuario);
+    
     // console.log("receta");
     // console.log(receta);
 
-    const [comentario, setComentario] = useState( { idReceta: id } );
-    const [error, setError] = useState(null);
+    
 
+    
 
     if(!receta || Object.keys(receta).length === 0)  return 'Cargando...';
         const {titulo, descripcion, imagen, ingredientes, comentarios, creado, votantes, _id, creador, } = receta

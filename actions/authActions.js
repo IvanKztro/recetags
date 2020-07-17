@@ -7,13 +7,14 @@ import clienteAxios from 'axios';
 import authToken from '../config/token'
 
 
+
 export function authUsuarioAction(){
     return async(dispatch)=>{
         dispatch(validandoUsuario());
 
         try {
             const token = localStorage.getItem("tokenRecetas");
-           
+           console.log(token);
             // if(token)
             // {
             //     //Funcion para asignar el token en el Header
@@ -22,7 +23,7 @@ export function authUsuarioAction(){
             // }
             clienteAxios.defaults.headers.common['x-auth-token'] = token;
             //console.log("token en actions")
-            console.log(clienteAxios.defaults.headers.common['x-auth-token']);
+            //console.log(clienteAxios.defaults.headers.common['x-auth-token']);
             const response = await clienteAxios.get("http://localhost:4000/api/auth/");
            // console.log(response.data.usuario);
             dispatch(validacionExitosa(response.data.usuario));

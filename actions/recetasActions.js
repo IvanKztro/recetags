@@ -11,13 +11,17 @@ import {
 import clienteAxios from '../config/axios';
 
 
+
+
 export function crearRecetaAction (receta){
     console.log("actionsss time");
     console.log(receta);
+    //const token = localStorage.getItem("tokenRecetas");
 
         return async (dispatch) => {
             dispatch(creandoRecetaReducer());
             try {
+           // clienteAxios.defaults.headers.common['x-auth-token'] = token;
             const response = await clienteAxios.post("api/recetas/crearReceta",receta)
             console.log(response.data.receta);
             dispatch(crearRecetaExitoReducer(response.data.receta));
@@ -239,8 +243,11 @@ export function agregarComentarioAction (comentario){
 
     return async (dispatch) =>{
         dispatch(agregandoComentarioReducer());
-
+        const token = localStorage.getItem("tokenRecetas");
+        console.log(token);
+        clienteAxios.defaults.headers.common['x-auth-token'] = token;
         try {
+            console.log(comentario);
             const response = await clienteAxios.put("/api/recetas/agregarComentario",comentario);
             console.log(response.data);
             //dispatch(agregarComentarioExitoReducer(response.data));
