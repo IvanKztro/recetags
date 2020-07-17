@@ -18,13 +18,15 @@ const BuscarReceta = ({receta, usuario}) => {
     const recetasBuscadas = useSelector(state => state.recetas.recetasBuscadas);
     const ingredienteBuscados = useSelector(state => state.recetas.ingredienteBuscados);
     const mostrarIngredientes = useSelector(state => state.recetas.mostrarIngredientes);
-
+    mostrarIngredientes
     //useState
     
 
     console.log(recetasBuscadas);
     console.log("ingredientes buscado");
     console.log(ingredienteBuscados);
+    console.log("mostrarIngredientes")
+    console.log(mostrarIngredientes)
 
     const dispatch = useDispatch();
 
@@ -39,11 +41,11 @@ const BuscarReceta = ({receta, usuario}) => {
     return ( 
         <Layout>
         {
-          mostrarIngrediente ?
-          <div>
-            ingredientes buscados: jejejejejje
-          </div>
-          : null
+          // mostrarIngrediente ?
+          // <div>
+          //   ingredientes buscados: jejejejejje
+          // </div>
+          // : null
         }
         <div className="mx-3 my-2 row">
           {
