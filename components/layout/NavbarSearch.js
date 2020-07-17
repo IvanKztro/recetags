@@ -5,9 +5,16 @@ import tokenAuth from '../../config/token'
 import clienteAxios from '../../config/axios';
 import Error from '../../components/Error'
 
+import Router,{useRouter} from 'next/router';
+
 //hook de validacion
 import useValidacion from '../../hooks/useValidacion';
 import validarBusquedaRecetas from '../../validacion/validarBusquedaRecetas'
+
+//REDUX IMPORTS
+import {useDispatch, useSelector} from 'react-redux'
+import {buscarPorRecetaAction, mostrarIngredientesAction, agregandoIngredienteAction} 
+from '../../actions/recetasActions'
 
 const BuscarReceta = styled.div`
         
@@ -66,31 +73,71 @@ const NavbarSearch = () => {
     const [isLogin, setLogin] = useState(false);
     const [tipoBusqueda, setTipoBusqueda] = useState("receta");
     const [busqueda, setBusqueda] = useState("");
+    const [dato, setDato] = useState("");
 
-    const [error, seError] = useState(false);
-    const {valores, errores, handleSubmit, handleChange} = useValidacion
-    (STATE_INITIAL, validarBusquedaRecetas, busquedaReceta);
-    const {buscado} = valores;
+    const [error, setError] = useState(false);
+    // const {valores, errores, handleSubmit, handleChange} = useValidacion
+    // (STATE_INITIAL, validarBusquedaRecetas, busquedaReceta);
+    // const {buscado} = valores;
 
-    function busquedaReceta () {
+    //VALORES Y FUNCIONES DE REDUX
+
+    const dispatch = useDispatch();
+    // const buscarPorReceta = () => dispatch(buscarPorRecetaAction(busqueda));
+    const mostrarIngredientes = useSelector(state => state.recetas.mostrarIngredientes);
+    const ingredienteBuscados = useSelector(state => state.recetas.ingredienteBuscados);
+
+    console.log("ingredienteBuscados")
+    console.log(ingredienteBuscados)
+    if(ingredienteBuscados)
+     console.log("existeee")
+     else
+     console.log("nelll")
+     
+
+
+    function busquedaReceta (e) {
+        e.preventDefault();
+        alert("buacando por receta")
+        if(busqueda.trim() === "")
+            return setError(true);
+        alert(busqueda);
+        Router.push({
+            pathname:'/buscarReceta',
+            query:{q: busqueda, tipoBusqueda}
+        })
+    
         
-        if(tipoBusqueda == "receta")
-        {
-            console.log("Buscando receta: ",buscado);
-        }
-        else{
-            console.log("Buscando ingrediente: ",buscado);
-        }
+        
+        // if(tipoBusqueda == "receta")
+        // {
+        //     console.log("Buscando receta: ",busqueda);
+        //     buscarPorReceta();
+        // }
+        // else{
+        //     console.log("Buscando ingrediente: ",busqueda);
+        // }
+    }
+
+    const agregarIngredienteA = () => dispatch(agregandoIngredienteAction(dato));
+    const agregarIngrediente = () =>{
+        console.log(dato);
+        agregarIngredienteA();
+    }
+
+    const verIngredientesA = () => dispatch(mostrarIngredientesAction(true));
+    const verIngredientes = () =>{
+        verIngredientesA();
     }
     return ( 
         <nav className="navbar navbar-dark bg-dark navbar-expand-lg"  > 
             <div className="  col-lg-12  bg-">
-                <form onSubmit={handleSubmit}>
+                <form >
                     
                     <div className="row bg-">
                     {
-                        errores.buscado 
-                        ?<Error error={errores.buscado}/> : null
+                        error
+                        ?<Error error="Campo vacio, escriba lo que busca"/> : null
                     }
                     <div className="bg- col-lg-2 col-12 mt-1">
                         <select className="form-control" onChange={ e => {setTipoBusqueda(e.target.value)}}>
@@ -104,30 +151,37 @@ const NavbarSearch = () => {
                         ?
                         <BuscarReceta className="bg- col-lg-8 col-12 mt-1">
                             <input type="text" className="form-control col-lg-12" placeholder="Buscar receta"
-                                onChange={handleChange}
-                                name= "buscado"
-                                value={buscado}
+                                onChange={e => setBusqueda(e.target.value)}
+                                name= "busqueda"
+                                value={busqueda}
                             />
                             
-                            <button type="submit" className=" mt-1"></button>
+                            <button type="button" onClick={busquedaReceta} className=" mt-1"></button>
                         </BuscarReceta>
                         :
                         <>
                         <BuscarIngrediente className="bg- col-lg-8 col-12 mt-1">
                             <input type="text" className="form-control" placeholder="Buscar Ingredente"
-                                onChange={handleChange}
-                                name= "buscado"
-                                value={buscado}
+                                onChange={ e => setDato(e.target.value)}
+                                name= "dato"
+                                value={dato}
                             />
                             
-                            <button type="submit" className="mt-1 add"></button>
+                            <button type="button" onClick={agregarIngrediente} className="mt-1 add"></button>
                         </BuscarIngrediente>
                         
 
                         <div className="col-lg-2  ">
                             <div>
-                                <button className="btn btn-sm btn-info form-control mt-1">Ver ingredientes</button>
+                                <button type="button" onClick={verIngredientes} 
+                                className="btn btn-sm btn-info form-control mt-1">Ver ingredientes</button>
                             </div>
+                            {
+                                (mostrarIngredientes && ingredienteBuscados) ?
+                                ingredienteBuscados.map((ingrediente, index) => (
+                                    <div key={index}>{ingrediente}</div>
+                                )): null
+                            }
                         </div>
                         
                         </>

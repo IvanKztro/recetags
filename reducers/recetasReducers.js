@@ -6,7 +6,11 @@ import {
     OBTENIENDO_RECETASPOPULARES, OBTENER_RECETASPOPULARES_EXITO, OBTENER_RECETASPOPULARES_ERROR,
     OBTENIENDO_RECETAID, OBTENER_RECETAID_EXITO, OBTENER_RECETAID_ERROR,
     ELIMINANDO_RECETA, ELIMINAR_RECETA_EXITO, ELIMINAR_RECETA_ERROR,
-    AGREGANDO_COMENTARIO, AGREGAR_COMENTARIO_EXITO, AGREGAR_COMENTARIO_ERROR
+    AGREGANDO_COMENTARIO, AGREGAR_COMENTARIO_EXITO, AGREGAR_COMENTARIO_ERROR,
+    BUSCANDO_POR_RECETA, BUSCAR_POR_RECETA_EXITO, BUSCAR_POR_RECETA_ERROR,
+    BUSCANDO_POR_INGREDIENTE, BUSCAR_POR_INGREDIENTE_EXITO, BUSCAR_POR_INGREDIENTE_ERROR,
+    MOSTRANDO_INGREDIENTES, MOSTRAR_INGREDIENTES_EXITO, MOSTRAR_INGREDIENTES_ERROR,
+    AGREGANDO_INGREDIENTE, AGREGAR_INGREDIENTE_EXITO, AGREGAR_INGREDIENTE_ERROR,
 } from '../types/index'
 
 const initialState = {
@@ -19,7 +23,11 @@ const initialState = {
     ingrediente: null,
     mensaje: null,
     comentario: null,
-    comentarios: []
+    comentarios: [],
+    recetasBuscadas: null,
+    ingredientesBuscados: [],
+    mostrarIngredientes: false
+
 }
 
 export default function (state = initialState, action){
@@ -46,6 +54,10 @@ export default function (state = initialState, action){
                     action.payload
                 ]
             }
+        // case BUSCANDO_POR_INGREDIENTE:
+        // case BUSCANDO_POR_RECETA:
+        case AGREGANDO_INGREDIENTE:
+        case MOSTRANDO_INGREDIENTES:
         case AGREGANDO_COMENTARIO:
         case ELIMINANDO_RECETA:
         case OBTENIENDO_RECETAID:
@@ -125,6 +137,42 @@ export default function (state = initialState, action){
                  recetaSelect: {},
                  recetasFav: state.recetasFav.filter(receta => receta._id !== action.payload),
              }
+        
+        case BUSCANDO_POR_INGREDIENTE:
+            return{
+                ...state,
+                cargando: true,
+            }
+        case BUSCANDO_POR_RECETA:
+            return{
+                ...state,
+                cargando: true,
+                recetasBuscadas: null
+            }
+        
+             
+        case BUSCAR_POR_RECETA_EXITO:
+            return{
+                ...state,
+                cargando: false,
+                recetasBuscadas: action.payload
+            }
+
+
+        
+        case MOSTRAR_INGREDIENTES_EXITO:
+            return{
+                ...state,
+                mostrarIngredientes: action.payload
+            }
+        case AGREGAR_INGREDIENTE_EXITO:
+            return{
+                ...state,
+                ingredientesBuscados:[
+                    ...state.ingredientesBuscados,
+                    action.payload
+                ]
+            }
 
         default: 
             return state
