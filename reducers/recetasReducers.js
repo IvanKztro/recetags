@@ -11,6 +11,8 @@ import {
     BUSCANDO_POR_INGREDIENTE, BUSCAR_POR_INGREDIENTE_EXITO, BUSCAR_POR_INGREDIENTE_ERROR,
     MOSTRANDO_INGREDIENTES, MOSTRAR_INGREDIENTES_EXITO, MOSTRAR_INGREDIENTES_ERROR,
     AGREGANDO_INGREDIENTE, AGREGAR_INGREDIENTE_EXITO, AGREGAR_INGREDIENTE_ERROR,
+    //SOLO UN TYPE
+    BORRAR_INGREDIENTES, CAMBIO_TIPO_BUSQUEDA, 
 } from '../types/index'
 
 const initialState = {
@@ -26,7 +28,8 @@ const initialState = {
     comentarios: [],
     recetasBuscadas: null,
     ingredientesBuscados: [],
-    mostrarIngredientes: false
+    mostrarIngredientes: false,
+    tipoBusqueda: 'receta'
 
 }
 
@@ -56,6 +59,7 @@ export default function (state = initialState, action){
             }
         // case BUSCANDO_POR_INGREDIENTE:
         // case BUSCANDO_POR_RECETA:
+        case AGREGANDO_RECETAFAV:
         case AGREGANDO_INGREDIENTE:
         case MOSTRANDO_INGREDIENTES:
         case AGREGANDO_COMENTARIO:
@@ -75,6 +79,7 @@ export default function (state = initialState, action){
                 mensaje: "Recetas listas",
                 recetasFav: action.payload
             }
+        // case AGREGAR_COMENTARIO_EXITO:
         case OBTENER_RECETASPOPULARES_EXITO:
         case OBTENER_RECETAS_EXITO:
             return{
@@ -103,11 +108,6 @@ export default function (state = initialState, action){
                 ...state,
                 recetaSelect: action.payload
             }
-        case AGREGANDO_RECETAFAV:
-            return{
-                ...state,
-                cargando: true,  
-            }
         case AGREGAR_RECETAFAV_EXITO:
             return{
                 ...state,
@@ -123,10 +123,7 @@ export default function (state = initialState, action){
         case AGREGAR_COMENTARIO_EXITO:
             return{
                 ...state,
-                comentarios:[
-                    ...state.comentarios,
-                    action.payload
-                ],
+                recetaSelect: action.payload,
                 cargando: false,
             }
         
@@ -168,10 +165,23 @@ export default function (state = initialState, action){
         case AGREGAR_INGREDIENTE_EXITO:
             return{
                 ...state,
+                cargando: false,
                 ingredientesBuscados:[
                     ...state.ingredientesBuscados,
                     action.payload
                 ]
+            }
+        
+        case BORRAR_INGREDIENTES:
+            return{
+                ...state,
+                ingredientesBuscados: [],
+                recetasBuscadas: action.payload
+            }
+        case CAMBIO_TIPO_BUSQUEDA:
+            return{
+                ...state,
+                tipoBusqueda: action.payload
             }
 
         default: 

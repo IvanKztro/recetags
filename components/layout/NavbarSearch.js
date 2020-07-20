@@ -13,7 +13,7 @@ import validarBusquedaRecetas from '../../validacion/validarBusquedaRecetas'
 
 //REDUX IMPORTS
 import {useDispatch, useSelector} from 'react-redux'
-import {buscarPorRecetaAction, mostrarIngredientesAction, agregandoIngredienteAction} 
+import {cambioTipoBusquedaAction, borrarIngredienteAction, agregandoIngredienteAction} 
 from '../../actions/recetasActions'
 
 const BuscarReceta = styled.div`
@@ -64,6 +64,15 @@ const BuscarReceta = styled.div`
         }
     `;
 
+    const ListaIngredientes = styled.div`
+        display: flex;
+        color: white;
+        div{
+            color: white;
+            margin-right: 5px;
+        }
+    `;
+
     const STATE_INITIAL ={
         buscado: ''
     }
@@ -71,7 +80,7 @@ const BuscarReceta = styled.div`
 const NavbarSearch = () => {
     
     const [isLogin, setLogin] = useState(false);
-    const [tipoBusqueda, setTipoBusqueda] = useState("receta");
+    //const [tipoBusqueda, setTipoBusqueda] = useState("receta");
     const [busqueda, setBusqueda] = useState("");
     const [dato, setDato] = useState("");
 
@@ -84,24 +93,30 @@ const NavbarSearch = () => {
 
     const dispatch = useDispatch();
     // const buscarPorReceta = () => dispatch(buscarPorRecetaAction(busqueda));
-    const mostrarIngredientes = useSelector(state => state.recetas.mostrarIngredientes);
-    const ingredienteBuscados = useSelector(state => state.recetas.ingredienteBuscados);
+    
+    const ingredientesBuscados = useSelector(state => state.recetas.ingredientesBuscados);
+    const tipoBusqueda = useSelector (state => state.recetas.tipoBusqueda);
+    const recetasRedux = useSelector(state => state.recetas.recetas);
 
-    console.log("ingredienteBuscados")
-    console.log(ingredienteBuscados)
-    if(ingredienteBuscados)
-     console.log("existeee")
-     else
-     console.log("nelll")
+    //console.log(tipoBusqueda);
+    
+    // console.log("ingredientesBuscados")
+    // console.log(ingredientesBuscados)
+    // if(ingredientesBuscados)
+    //  console.log("existeee")
+    //  else
+    //  console.log("nelll")
+
+    // console.log("mostrarIngredientes")
+    // console.log(mostrarIngredientes)
      
 
 
     function busquedaReceta (e) {
         e.preventDefault();
-        alert("buacando por receta")
         if(busqueda.trim() === "")
             return setError(true);
-        alert(busqueda);
+
         Router.push({
             pathname:'/buscarReceta',
             query:{q: busqueda, tipoBusqueda}
@@ -121,13 +136,27 @@ const NavbarSearch = () => {
 
     const agregarIngredienteA = () => dispatch(agregandoIngredienteAction(dato));
     const agregarIngrediente = () =>{
-        console.log(dato);
+        //console.log(dato);
         agregarIngredienteA();
+        setDato("");
+        Router.push({
+            pathname:'/buscarReceta',
+            query:{q: dato, tipoBusqueda}
+        })
+
     }
 
-    const verIngredientesA = () => dispatch(mostrarIngredientesAction(true));
-    const verIngredientes = () =>{
-        verIngredientesA();
+    const borrarIngredientesA = () => dispatch(borrarIngredienteAction(recetasRedux));
+    const borrarIngredientes = () =>{
+        borrarIngredientesA();
+    }
+
+    const cambioTipoBusquedaA = (tipoBusqueda) =>dispatch(cambioTipoBusquedaAction(tipoBusqueda));
+
+    const cambioTipoBusqueda = (tipoBusqueda) =>{
+        console.log(tipoBusqueda)
+        cambioTipoBusquedaA(tipoBusqueda);
+        //console.log(tipoBusqueda)
     }
     return ( 
         <nav className="navbar navbar-dark bg-dark navbar-expand-lg"  > 
@@ -140,7 +169,7 @@ const NavbarSearch = () => {
                         ?<Error error="Campo vacio, escriba lo que busca"/> : null
                     }
                     <div className="bg- col-lg-2 col-12 mt-1">
-                        <select className="form-control" onChange={ e => {setTipoBusqueda(e.target.value)}}>
+                        <select className="form-control" onChange={ e => {cambioTipoBusqueda(e.target.value)}}>
                             <option defaultValue value="receta">Por receta</option>
                             <option value="ingrediente">Por ingrediente</option>
                         </select>
@@ -173,15 +202,18 @@ const NavbarSearch = () => {
 
                         <div className="col-lg-2  ">
                             <div>
-                                <button type="button" onClick={verIngredientes} 
-                                className="btn btn-sm btn-info form-control mt-1">Ver ingredientes</button>
+                                <button type="button" onClick={borrarIngredientes} 
+                                className="btn btn-sm btn-warning form-control mt-1">Borrar ingredientes y busqueda</button>
                             </div>
+                            <ListaIngredientes>
                             {
-                                (mostrarIngredientes && ingredienteBuscados) ?
-                                ingredienteBuscados.map((ingrediente, index) => (
+                                (ingredientesBuscados.length !== 0) ?
+                                ingredientesBuscados.map((ingrediente, index) => (
                                     <div key={index}>{ingrediente}</div>
                                 )): null
                             }
+                            </ListaIngredientes>
+
                         </div>
                         
                         </>

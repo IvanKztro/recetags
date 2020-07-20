@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react';
 import { useRouter } from 'next/router';
 import {useDispatch, useSelector} from 'react-redux'
 
-import {buscarPorRecetaAction} from '../actions/recetasActions'
+import {buscarPorRecetaAction, obtenerRecetasAction} from '../actions/recetasActions'
 
 import Layout from '../components/layout/Layout'
 import Receta from '../components/layout/InfoReceta'
@@ -12,29 +12,62 @@ import Receta from '../components/layout/InfoReceta'
 const BuscarReceta = ({receta, usuario}) => {
 
     const router = useRouter();
-    const { query: { q, tipoBusqueda }} = router;
+    let { query: { q, tipoBusqueda }} = router;
+
+    
+    
+
 
     //DATA DE REDUX
     const recetasBuscadas = useSelector(state => state.recetas.recetasBuscadas);
-    const ingredienteBuscados = useSelector(state => state.recetas.ingredienteBuscados);
-    const mostrarIngredientes = useSelector(state => state.recetas.mostrarIngredientes);
-    mostrarIngredientes
+    // const ingredienteBuscados = useSelector(state => state.recetas.ingredienteBuscados);
+    // const mostrarIngredientes = useSelector(state => state.recetas.mostrarIngredientes);
+
+    const recetasRedux = useSelector(state => state.recetas.recetas);
+    //mostrarIngredientes
     //useState
     
 
-    console.log(recetasBuscadas);
-    console.log("ingredientes buscado");
-    console.log(ingredienteBuscados);
-    console.log("mostrarIngredientes")
-    console.log(mostrarIngredientes)
+    // console.log(recetasBuscadas);
+    // console.log("ingredientes buscado");
+    // console.log(ingredienteBuscados);
+    // console.log("mostrarIngredientes")
+    // console.log(mostrarIngredientes)
 
     const dispatch = useDispatch();
+    // let buscarRecetas;
+
+    const orden = "creado";
 
     useEffect(() => {
-        console.log("useEffect");
-        const buscarRecetas = ()=> dispatch(buscarPorRecetaAction(tipoBusqueda, q));
-
+        // console.log("useEffect");
+        // console.log(q);
+        // console.log(tipoBusqueda);
+        // console.log("recetasBuscadas")
+        // console.log(recetasBuscadas)
+        // console.log("recetasRedux")
+        // console.log(recetasRedux)
+      // if(!recetasBuscadas && recetasRedux.length == 0)
+      // {
+      //   q= ""
+      //   tipoBusqueda = ""
+      //   console.log("recuperando todas as recetas")
+      //   const getRecetas = () => dispatch(obtenerRecetasAction(usuario, orden));
+      //   getRecetas();
+      // }
+      // else{
+        // console.log("filtrnado recetas boooooooooooooooooooooo")
+        
+        const buscarRecetas = tipoBusqueda === "receta" 
+        ?  ()=> dispatch(buscarPorRecetaAction(tipoBusqueda, q, recetasRedux))
+        :  
+          
+        ()=> dispatch(buscarPorRecetaAction(tipoBusqueda, q, (!recetasBuscadas) ? recetasRedux : recetasBuscadas ))  
+        
         buscarRecetas();
+      //}
+
+      
     }, [q])
 
 

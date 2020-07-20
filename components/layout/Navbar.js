@@ -10,7 +10,7 @@ import NavbarSearch from './NavbarSearch'
 // import useAutenticacion from '../../hooks/useAutenticacion';
 import AuthContext from '../../context/auth/authContext'
 //import clienteAxios from 'axios';
-import {authUsuarioAction} from '../../actions/authActions';
+import {authUsuarioAction, cerrarSesionAction} from '../../actions/authActions';
 import {useDispatch, useSelector} from 'react-redux';
 
 
@@ -45,6 +45,12 @@ const Navbar = ({auth}) => {
         const authUsuario = () => dispatch(authUsuarioAction());
         authUsuario();
    }, [autenticadoRedux]);
+
+
+   const cerrarSesionA = () => dispatch(cerrarSesionAction());
+   const cerrarSesion = () =>{
+    cerrarSesionA();
+   }
 
    
     
@@ -86,15 +92,15 @@ const Navbar = ({auth}) => {
                         autenticadoRedux 
                         ?
                         <li className="nav-item">
-                            <Link  href="/">
-                                <a className="nav-link">Cerrar sesión </a>
-                            </Link>  
+                            {/* <Link  href="/"> */}
+                                <a onClick={cerrarSesion} className="nav-link">Cerrar sesión </a>
+                            {/* </Link>   */}
                         </li>
                         :
                         <>
                         <li className="nav-item">
                             <Link  href="/login">
-                                <a className="nav-link">Login </a>
+                                <a className="nav-link">Iniciar sesión</a>
                             </Link>  
                         </li>
                         <li className="nav-item">

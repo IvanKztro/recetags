@@ -145,7 +145,7 @@ const Receta = () => {
                     <button
                         onClick={eliminarReceta}
                         className="btn btn-danger mb-3"
-                    >Eliminar Producto</button>
+                    >Eliminar Receta</button>
                 </div>
             } 
                     <div className="container">

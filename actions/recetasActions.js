@@ -10,6 +10,8 @@ import {
     BUSCANDO_POR_INGREDIENTE, BUSCAR_POR_INGREDIENTE_EXITO, BUSCAR_POR_INGREDIENTE_ERROR,
     MOSTRANDO_INGREDIENTES, MOSTRAR_INGREDIENTES_EXITO, MOSTRAR_INGREDIENTES_ERROR,
     AGREGANDO_INGREDIENTE, AGREGAR_INGREDIENTE_EXITO, AGREGAR_INGREDIENTE_ERROR,
+    //SOLO UN TYPE
+    BORRAR_INGREDIENTES, CAMBIO_TIPO_BUSQUEDA,
 } from '../types/index'
 
 import clienteAxios from '../config/axios';
@@ -176,14 +178,14 @@ const agregarRecetaFavErrorReducer = (msg) => ({
 export function ObtenerRecetaIdAction(_id){
 
     return async(dispatch)=>{
-        console.log("ObtenerRecetaIdAction");
-        console.log(_id);
+        // console.log("ObtenerRecetaIdAction");
+        // console.log(_id);
         dispatch(obteniendoRecetaIdReducer());
 
         try {
-            console.log("ObtenerRecetaIdAction")
+            // console.log("ObtenerRecetaIdAction")
             const response = await clienteAxios.post("/api/recetas/obtenerRecetaByID",{_id})
-            console.log(response.data.recetaById);
+            // console.log(response.data.recetaById);
             dispatch(obtenerRecetaIdExitoReducer(response.data.recetaById))
         } catch (error) {
             console.log(error.response);
@@ -214,11 +216,14 @@ export function eliminarRecetaAction(id){
     return async(dispatch) => {
 
         dispatch(eliminandoRecetaReducer());
+        const token = localStorage.getItem("tokenRecetas");
+        //console.log(token);
+        clienteAxios.defaults.headers.common['x-auth-token'] = token;
 
         try {
                                                         
             const response = await clienteAxios.delete(`/api/recetas/eliminarReceta/${id}`);
-            console.log(response.data._id);
+            //console.log(response.data._id);
             dispatch(eliminarRecetaExitoReducer(response.data._id));
         } catch (error) {
             console.log(error.response);
@@ -244,17 +249,17 @@ const eliminarRecetaErrorReducer = (msg) => ({
 })
 
 export function agregarComentarioAction (comentario){
-
+    console.log("AGREGANDO NUEVO COMENTARIO");
     return async (dispatch) =>{
         dispatch(agregandoComentarioReducer());
         const token = localStorage.getItem("tokenRecetas");
-        console.log(token);
+        //console.log(token);
         clienteAxios.defaults.headers.common['x-auth-token'] = token;
         try {
             console.log(comentario);
             const response = await clienteAxios.put("/api/recetas/agregarComentario",comentario);
-            console.log(response.data);
-            //dispatch(agregarComentarioExitoReducer(response.data));
+            console.log(response.data.receta);
+            dispatch(agregarComentarioExitoReducer(response.data.receta));
         } catch (error) {
             console.log(error.response);
         }
@@ -266,14 +271,14 @@ const agregandoComentarioReducer = () =>({
     type: AGREGANDO_COMENTARIO,
 });
 
-const agregarComentarioExitoReducer = (comentario) => ({
+const agregarComentarioExitoReducer = (receta) => ({
     type: AGREGAR_COMENTARIO_EXITO,
-    payload: comentario
+    payload: receta
 })
 
 //BUSCAR RECETAS
 
-export function buscarPorRecetaAction(tipoBusqueda, receta){
+export function buscarPorRecetaAction(tipoBusqueda, receta, listaRecetas){
 
     return async(dispatch) => {
         if(tipoBusqueda === "receta")
@@ -281,17 +286,17 @@ export function buscarPorRecetaAction(tipoBusqueda, receta){
         else
             dispatch(buscandoPorIngredienteReducer());
         try {
-            console.log(receta);
-            const response = await clienteAxios.post('/api/recetas/buscarPorReceta', {receta});
-            console.log(response.data);
+            //console.log(receta);
+            // const response = await clienteAxios.post('/api/recetas/buscarPorReceta', {receta});
+            // console.log(response.data);
             const buscado = receta.toLowerCase();
-            console.log("buscado")
-            console.log(tipoBusqueda)
+            // console.log("buscado")
+            // console.log(tipoBusqueda)
 
             if(tipoBusqueda === "receta")
             {
                 //FILTRO POR TITULO Y DESCRIPCION
-                const filtro = response.data.filter( receta => {
+                const filtro = listaRecetas.filter( receta => {
                     return(
                         receta.titulo.toLowerCase().includes(buscado) ||
                         receta.descripcion.toLowerCase().includes(buscado)
@@ -306,7 +311,7 @@ export function buscarPorRecetaAction(tipoBusqueda, receta){
             {
                     // CODIGO PARA BUSCAR POR INGREDIENTE
                 let recetasFiltradas =[]
-                response.data.map( receta => 
+                listaRecetas.map( receta => 
                 (
                 receta.ingredientes.map( ingre => {
                     if(buscado.includes(ingre.ingrediente.toLowerCase()))
@@ -404,4 +409,31 @@ const agregandoIngredienteReducer = () => ({
 const agregarIngredienteReducer = (ingrediente) => ({
     type: AGREGAR_INGREDIENTE_EXITO,
     payload: ingrediente
+})
+
+
+export function borrarIngredienteAction (recetas){
+    console.log(recetas)
+    return async(dispatch) => {
+        dispatch(borrarIngredienteReducer(recetas));
+
+    }
+}
+
+const borrarIngredienteReducer = (recetas) => ({
+    type: BORRAR_INGREDIENTES,
+    payload: recetas
+})
+
+export function cambioTipoBusquedaAction (tipoBusqueda){
+    // console.log("tipoBusqueda desde Actions")
+    // console.log(tipoBusqueda)
+    return async(dispatch) => {
+        dispatch(cambioTipoBusquedaReducer(tipoBusqueda));
+    }
+}
+
+const cambioTipoBusquedaReducer = (tipoBusqueda) => ({
+    type: CAMBIO_TIPO_BUSQUEDA,
+    payload: tipoBusqueda
 })

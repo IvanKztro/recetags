@@ -39,6 +39,7 @@ const Login = () => {
     const router = useRouter();
 
     useEffect(() => {
+        console.log(autenticadoRedux);
         if(autenticadoRedux)
         {
             router.push('/');
@@ -58,6 +59,7 @@ const Login = () => {
 
     function setLogin(){
         logearUsuario();
+        router.push('/');
     }
 
 

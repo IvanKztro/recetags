@@ -1,7 +1,7 @@
 //Cada
 import {
     AUTH_USUARIO, AUTH_USUARIO_EXITOSO, AUTH_USUARIO_ERROR, 
-    LOGIN_LOADING, LOGIN_EXITOSO, LOGIN_ERROR
+    LOGIN_LOADING, LOGIN_EXITOSO, LOGIN_ERROR, CERRAR_SESION
 } from '../types/index'
 
 
@@ -63,6 +63,16 @@ export default function (state = initialState, action){
                 mensaje: action.payload
                 
             }
+
+        case CERRAR_SESION:
+            return{
+                ...state,
+                token: null,
+                autenticado: false,
+                usuario: null,
+            }
+
+        
         default:
             return state;
     }

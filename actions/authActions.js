@@ -1,6 +1,7 @@
 import {
     AUTH_USUARIO, AUTH_USUARIO_EXITOSO, AUTH_USUARIO_ERROR,
-    LOGIN_LOADING, LOGIN_EXITOSO, LOGIN_ERROR} from '../types/index'
+    LOGIN_LOADING, LOGIN_EXITOSO, LOGIN_ERROR, CERRAR_SESION
+} from '../types/index'
 
 //import clienteAxios from '../config/axios';
 import clienteAxios from 'axios';
@@ -14,7 +15,7 @@ export function authUsuarioAction(){
 
         try {
             const token = localStorage.getItem("tokenRecetas");
-           console.log(token);
+           //console.log(token);
             // if(token)
             // {
             //     //Funcion para asignar el token en el Header
@@ -28,7 +29,7 @@ export function authUsuarioAction(){
            // console.log(response.data.usuario);
             dispatch(validacionExitosa(response.data.usuario));
         } catch (error) {
-            console.log(error.response.data.msg);
+            //console.log(error.response.data.msg);
             dispatch(validacionError());
         }
     }
@@ -77,4 +78,17 @@ const loginExitoso = (usuario) =>({
 const loginError = (msg) => ({
     type: LOGIN_ERROR,
     payload: msg
+})
+
+export function cerrarSesionAction() {
+
+    return (dispatch) => {
+        localStorage.setItem("tokenRecetas","");
+        dispatch(cerrarSesionReducer());
+    }
+}
+
+const cerrarSesionReducer = () => ({
+    type: CERRAR_SESION,
+    
 })
