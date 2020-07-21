@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "webpack-dev-server --inline --content-base . --history-api-fallback",
+    "export": "next export",
+    "buildexport": "next build && next export"
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",

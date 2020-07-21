@@ -4,14 +4,16 @@ import {
 } from '../types/index'
 
 //import clienteAxios from '../config/axios';
-import clienteAxios from 'axios';
+//import clienteAxios from 'axios';
 import authToken from '../config/token'
+import clienteAxios from '../config/axios'
 
 
 
 export function authUsuarioAction(){
     return async(dispatch)=>{
         dispatch(validandoUsuario());
+       // console.log(clienteAxios.baseURL)
 
         try {
             const token = localStorage.getItem("tokenRecetas");
@@ -25,7 +27,7 @@ export function authUsuarioAction(){
             clienteAxios.defaults.headers.common['x-auth-token'] = token;
             //console.log("token en actions")
             //console.log(clienteAxios.defaults.headers.common['x-auth-token']);
-            const response = await clienteAxios.get("http://localhost:4000/api/auth/");
+            const response = await clienteAxios.get("api/auth/");
            // console.log(response.data.usuario);
             dispatch(validacionExitosa(response.data.usuario));
         } catch (error) {
@@ -40,7 +42,7 @@ export function loginUsuarioAction (valores){
         dispatch(logingUsuario());
         try {
            // console.log(valores);
-            const response = await clienteAxios.post('http://localhost:4000/api/auth/login',valores);
+            const response = await clienteAxios.post('api/auth/login',valores);
             //console.log(response.data);
             dispatch(loginExitoso(response.data));
             localStorage.setItem("tokenRecetas",response.data.password);

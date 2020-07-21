@@ -65,7 +65,7 @@ const Navbar = ({auth}) => {
                 <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
                     <Link  href="/">
-                        <a className="nav-link">Home <span className="sr-only">(current)</span></a>
+                        <a className="nav-link">Recetas<span className="sr-only">(current)</span></a>
                     </Link>
                 </li>
                 <li className="nav-item">

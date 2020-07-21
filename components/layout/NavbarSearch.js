@@ -114,6 +114,7 @@ const NavbarSearch = () => {
 
     function busquedaReceta (e) {
         e.preventDefault();
+        // console.log(busqueda);
         if(busqueda.trim() === "")
             return setError(true);
 
@@ -154,7 +155,7 @@ const NavbarSearch = () => {
     const cambioTipoBusquedaA = (tipoBusqueda) =>dispatch(cambioTipoBusquedaAction(tipoBusqueda));
 
     const cambioTipoBusqueda = (tipoBusqueda) =>{
-        console.log(tipoBusqueda)
+        // console.log(tipoBusqueda)
         cambioTipoBusquedaA(tipoBusqueda);
         //console.log(tipoBusqueda)
     }
@@ -203,7 +204,7 @@ const NavbarSearch = () => {
                         <div className="col-lg-2  ">
                             <div>
                                 <button type="button" onClick={borrarIngredientes} 
-                                className="btn btn-sm btn-warning form-control mt-1">Borrar ingredientes y busqueda</button>
+                                className="btn btn-sm btn-warning form-control mt-1">Borrar busqueda</button>
                             </div>
                             <ListaIngredientes>
                             {

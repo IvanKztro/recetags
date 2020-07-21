@@ -5,6 +5,8 @@ import Layout from '../components/layout/Layout'
 import Receta from '../components/layout/InfoReceta'
 import NavbarSearch from '../components/layout/NavbarSearch'
 
+import clienteAxios from 'axios'
+
 //REACT
 import React, {useEffect} from 'react'
 
@@ -12,10 +14,14 @@ import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {obtenerRecetasAction} from '../actions/recetasActions';
 
-export default function Home() {
+
+function Home({recetas}) {
+
+ 
+//export default function Home() {
 
   //let listaRecetasRedux = useSelector
-  const recetas = useSelector(state => state.recetas.recetas);
+  // const recetas = useSelector(state => state.recetas.recetas);
   const usuario = useSelector(state => state.auth.usuario);
 
   const orden = "creado";
@@ -23,12 +29,16 @@ export default function Home() {
 
   const dispatch = useDispatch();
 
+  const getRecetas = () => dispatch(obtenerRecetasAction(orden));
+  getRecetas();
 
+  
 
-  useEffect(() => {
-    const getRecetas = () => dispatch(obtenerRecetasAction(usuario, orden));
-    getRecetas();
-  }, [])
+  // useEffect(() => {
+  //   const getRecetas = () => dispatch(obtenerRecetasAction(usuario, orden));
+  //   getRecetas();
+  // }, [])
+
   //PARA PAI Y PAGINADO DE ELEMENTOS
   // const lista =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
   // const perPage = 5;
@@ -84,3 +94,18 @@ export default function Home() {
       </Layout>
   )
 }
+
+
+//export async function getStaticProps() {
+export async function getStaticProps(){
+  
+  const recetas = await clienteAxios.post('https://api-recetags.herokuapp.com/api/recetas/', {orden: 'creado'});
+  
+  return{
+    props:{
+      recetas: recetas.data
+    }
+  }
+}
+
+export default Home

@@ -52,18 +52,18 @@ const crearRecetaExitoReducer = (msg) =>({
     payload: msg
 })
 
-export function obtenerRecetasAction(usuario, orden){
+export function obtenerRecetasAction(orden){
 
     return async(dispatch) => {
         dispatch(obteniendoRecetasReducer());
         try {
             // console.log(usuario);
             // console.log(orden);
-            let recetas;
-            if(usuario)
-                recetas = await clienteAxios.post('api/recetas/', {orden: orden});
-            else
-                recetas = await clienteAxios.post('api/recetas/', {orden});
+            // let recetas;
+            // if(usuario)
+            const recetas = await clienteAxios.post('api/recetas/', {orden: orden});
+            // else
+            //     recetas = await clienteAxios.post('api/recetas/', {orden});
             // console.log(recetas.data);
             // console.log(usuario);
             
@@ -286,6 +286,12 @@ export function buscarPorRecetaAction(tipoBusqueda, receta, listaRecetas){
         else
             dispatch(buscandoPorIngredienteReducer());
         try {
+            // console.log("tipoBusqueda")
+            // console.log(tipoBusqueda)
+            // console.log("receta")
+            // console.log(receta)
+            // console.log("listaRecetas")
+            // console.log(listaRecetas)
             //console.log(receta);
             // const response = await clienteAxios.post('/api/recetas/buscarPorReceta', {receta});
             // console.log(response.data);
@@ -303,7 +309,7 @@ export function buscarPorRecetaAction(tipoBusqueda, receta, listaRecetas){
                     )
                 });
 
-                console.log(filtro);
+                // console.log(filtro);
 
                 dispatch(buscarPorRecetaExitoReducer(filtro));
             }
@@ -319,7 +325,7 @@ export function buscarPorRecetaAction(tipoBusqueda, receta, listaRecetas){
                 })
                 )
                 )
-                console.log(recetasFiltradas);
+                // console.log(recetasFiltradas);
                 dispatch(buscarPorIngredienteExitoReducer(recetasFiltradas));
             }
     //   const filtro =  productos.filter(producto => {
@@ -393,8 +399,8 @@ const mostrarIngredientesErrorReducer = () => ({
 export function agregandoIngredienteAction (ingrediente){
 
     return (dispatch)=>{
-        console.log("ingrediente buscado Reducer")
-        console.log(ingrediente)
+        // console.log("ingrediente buscado Reducer")
+        // console.log(ingrediente)
         dispatch(agregandoIngredienteReducer());
         dispatch(agregarIngredienteReducer(ingrediente));
 
@@ -413,7 +419,7 @@ const agregarIngredienteReducer = (ingrediente) => ({
 
 
 export function borrarIngredienteAction (recetas){
-    console.log(recetas)
+    // console.log(recetas)
     return async(dispatch) => {
         dispatch(borrarIngredienteReducer(recetas));
 

@@ -1,33 +1,34 @@
-import Head from 'next/head'
+//import Head from 'next/head'
 
 
 import Layout from '../components/layout/Layout'
 import Receta from '../components/layout/InfoReceta'
-import NavbarSearch from '../components/layout/NavbarSearch'
+//import NavbarSearch from '../components/layout/NavbarSearch'
 
 //REACT
-import React, {useEffect} from 'react'
+import React from 'react'
 
 //REDUX
-import {useDispatch, useSelector} from 'react-redux'
-import {obtenerRecetasAction} from '../actions/recetasActions';
+// import {useDispatch, useSelector} from 'react-redux'
+// import {obtenerRecetasAction} from '../actions/recetasActions';
+import clienteAxios from '../config/axios'
 
-const Populares = () => {
+function Populares ({recetas}) {
 
   //let listaRecetasRedux = useSelector
-  const recetas = useSelector(state => state.recetas.recetas);
-  const usuario = useSelector(state => state.auth.usuario);
-  const orden = "votos";
+  //const recetas = useSelector(state => state.recetas.recetas);
+  //const usuario = useSelector(state => state.auth.usuario);
+  // const orden = "votos";
   
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
 
 
-  useEffect(() => {
-    const getRecetas = () => dispatch(obtenerRecetasAction({orden}));
-    getRecetas();
-  }, [])
+  // useEffect(() => {
+  //   const getRecetas = () => dispatch(obtenerRecetasAction({orden}));
+  //   getRecetas();
+  // }, [])
   
   return (
     
@@ -48,4 +49,17 @@ const Populares = () => {
       </Layout>
   )
 }
+
+export async function getStaticProps() {
+
+  const recetas = await clienteAxios.post('api/recetas/', {orden: 'votos'});
+  
+
+  return{
+    props:{
+      recetas: recetas.data
+    }
+  }
+}
+
 export default Populares;

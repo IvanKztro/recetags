@@ -9,10 +9,13 @@ import Receta from '../components/layout/InfoReceta'
 
 //HOOKS
 //import {} from '../hooks/useBuscarReceta'
-const BuscarReceta = ({receta, usuario}) => {
+const BuscarReceta = () => {
 
     const router = useRouter();
     let { query: { q, tipoBusqueda }} = router;
+
+    
+    
 
     
     
@@ -57,6 +60,12 @@ const BuscarReceta = ({receta, usuario}) => {
       // }
       // else{
         // console.log("filtrnado recetas boooooooooooooooooooooo")
+            // console.log("tipoBusqueda")
+            // console.log(tipoBusqueda)
+            // console.log("q")
+            // console.log(q)
+            // console.log("recetasRedux")
+            // console.log(recetasRedux)
         
         const buscarRecetas = tipoBusqueda === "receta" 
         ?  ()=> dispatch(buscarPorRecetaAction(tipoBusqueda, q, recetasRedux))
@@ -88,7 +97,6 @@ const BuscarReceta = ({receta, usuario}) => {
                 <Receta
                   key ={receta._id}
                   receta = {receta}
-                  usuario = {usuario}
                 />
               ))
             : null
