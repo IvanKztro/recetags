@@ -130,7 +130,13 @@ const InfoReceta = ({receta, usuario}) => {
     //         </Descripcion>
     
     <div className="card col-12 col-md-4 col-lg-3 mb-2" >
-        <Imagen className="" src={receta.imagen} alt={receta.titulo} loading="lazy"/>
+        {
+            receta.imagen === "noImagen" ?
+            <Imagen className="" src="./img/noImagen.png" alt={receta.titulo} loading="lazy"/>
+            :
+            <Imagen className="" src={receta.imagen} alt={receta.titulo} loading="lazy"/>
+        }
+        
         <Fecha>Publicado hace: {formatDistanceToNow(new Date(receta.creado), {locale: es})}</Fecha>
         <div className="card-body" >
             <h5 className="card-title">{receta.titulo}</h5>

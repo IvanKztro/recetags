@@ -71,14 +71,14 @@ const Boton = styled.button`
                             listaIngredientes.length == 0
                             ? <p>No hay ingredientes agregados</p>
                             :
-                            <p>ssssssss</p>
-                            // listaIngredientes.map( (ingre, index) =>(
-                            //     <Boton
-                            //         type ="button" key={index} className="btn  mt-3"
-                            //         onClick={ ()=> eliminarIngrediente(ingre)}>
-                            //         {ingre} &times;
-                            //     </Boton>
-                            // ))
+                            
+                            listaIngredientes.map( (ingre, index) =>(
+                                <Boton
+                                    type ="button" key={index} className="btn  mt-3"
+                                    onClick={ ()=> eliminarIngrediente(ingre)}>
+                                    {ingre.ingrediente} &times;
+                                </Boton>
+                            ))
                             
 
                         }

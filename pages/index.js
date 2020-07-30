@@ -100,7 +100,7 @@ function Home({recetas}) {
 export async function getStaticProps(){
   
   const recetas = await clienteAxios.post('https://api-recetags.herokuapp.com/api/recetas/', {orden: 'creado'});
-  
+  //console.log(recetas.data);
   return{
     props:{
       recetas: recetas.data

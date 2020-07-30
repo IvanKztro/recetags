@@ -20,8 +20,8 @@ import clienteAxios from '../config/axios';
 
 
 export function crearRecetaAction (receta){
-    console.log("actionsss time");
-    console.log(receta);
+    // console.log("actionsss time");
+    // console.log(receta);
     //const token = localStorage.getItem("tokenRecetas");
 
         return async (dispatch) => {
@@ -29,7 +29,7 @@ export function crearRecetaAction (receta){
             try {
            // clienteAxios.defaults.headers.common['x-auth-token'] = token;
             const response = await clienteAxios.post("api/recetas/crearReceta",receta)
-            console.log(response.data.receta);
+            // console.log(response.data.receta);
             dispatch(crearRecetaExitoReducer(response.data.receta));
         } catch (error) {
             console.log(error.response);
@@ -140,15 +140,15 @@ const obtenerRecetasFavErrorReducer = (msg) => ({
 
 export function agregarRecetaFavAction(usuario, idReceta){
     return async (dispatch) => {
-        console.log("EN AGREGAR FAV DESDE ACTIONS")
-        console.log(usuario)
-        console.log(idReceta)
+        // console.log("EN AGREGAR FAV DESDE ACTIONS")
+        // console.log(usuario)
+        // console.log(idReceta)
 
         dispatch(agregandoRecetaFavReducer());
         try {
-            console.log(idReceta);
+            // console.log(idReceta);
             const response = await clienteAxios.post('/api/recetas/agregarRecetaFav',{usuario, idReceta});
-            console.log(response.data.receta);
+            // console.log(response.data.receta);
             dispatch(agregarRecetaFavExitoReducer(response.data.receta));
             
         } catch (error) {
@@ -212,7 +212,7 @@ const obtenerRecetaIdErrorReducer = (msg) =>({
 
 
 export function eliminarRecetaAction(id){
-    console.log("ELIMINADO RECETA POR ID");
+    // console.log("ELIMINADO RECETA POR ID");
     return async(dispatch) => {
 
         dispatch(eliminandoRecetaReducer());
@@ -249,16 +249,16 @@ const eliminarRecetaErrorReducer = (msg) => ({
 })
 
 export function agregarComentarioAction (comentario){
-    console.log("AGREGANDO NUEVO COMENTARIO");
+    // console.log("AGREGANDO NUEVO COMENTARIO");
     return async (dispatch) =>{
         dispatch(agregandoComentarioReducer());
         const token = localStorage.getItem("tokenRecetas");
         //console.log(token);
         clienteAxios.defaults.headers.common['x-auth-token'] = token;
         try {
-            console.log(comentario);
+            // console.log(comentario);
             const response = await clienteAxios.put("/api/recetas/agregarComentario",comentario);
-            console.log(response.data.receta);
+            // console.log(response.data.receta);
             dispatch(agregarComentarioExitoReducer(response.data.receta));
         } catch (error) {
             console.log(error.response);

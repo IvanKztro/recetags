@@ -44,8 +44,8 @@ const CrearReceta = () => {
         const getAutenticacion = async() =>  await dispatch(authUsuarioAction());
         getAutenticacion();
 
-        console.log(usuario)
-        console.log(autenticadoRedux)
+        // console.log(usuario)
+        // console.log(autenticadoRedux)
 
 
         
@@ -66,6 +66,10 @@ const CrearReceta = () => {
     const [listaIngredientes, setListaIngredientes] = useState([]);
     const [estadoFormulario, setEstadoFormulario] = useState(1);
     const [receta, setReceta] = useState({});
+
+    const [loading, setLoading] = useState(true);
+    const [image, setImage] = useState('')
+    const [urlImage, setUrlImage] = useState(null);
 
     const [isReadyForm, setReadyForm] = useState(false);
     const [error, setError] = useState(null);
@@ -89,6 +93,8 @@ const CrearReceta = () => {
     
 
     const siguienteForm = ()=>{
+
+        
 
         if(estadoFormulario == 1)
         {
@@ -126,7 +132,7 @@ const CrearReceta = () => {
             //     nombre: `${usuario.nombre} ${usuario.apellidos}`,
             //     correo: usuario.correo
             // },
-            imagen: "noImagen",
+            imagen: urlImage,
             ingredientes: listaIngredientes
         }
         //MANDAR A LLAMAR AL METODO DE REDUX
@@ -134,23 +140,43 @@ const CrearReceta = () => {
         //primero se autentica al usuario
         //await autenticacion();
         //crear la receta
-        crearNuevaReceta(nuevaRecetaRedux);   
+        await crearNuevaReceta(nuevaRecetaRedux);   
         
         //RESET DE FORMULARIO
-        setError(null);
-        setEstadoFormulario(1);
-        titulo =""
-        descripcion =""
-        setListaIngredientes([]);
+        // setError(null);
+        // titulo =""
+        // descripcion =""
+        // setEstadoFormulario(1);
+        
+        
+        // setListaIngredientes([]);
         Router.push("/");
-        
-        
-        
-
-        
-    
+        setLoading(true);
+        setUrlImage(null);
     }
 
+    
+
+    const handleImage = async(e) =>{
+        //console.log("cambiando imagen")
+        setLoading(false)
+        const files = e.target.files;
+        const data = new FormData()
+
+        data.append('file', files[0]);
+        data.append('upload_preset', 'recetags_preset')
+        const response = await fetch('https://api.cloudinary.com/v1_1/imageapi2020/image/upload',{
+        method: 'POST',
+        body: data
+        });
+        
+
+        const file = await response.json()
+        //console.log(file)
+        setUrlImage(file.secure_url);
+        setLoading(true);
+
+    }
 
     
 
@@ -190,9 +216,32 @@ const CrearReceta = () => {
                             </div>
                             <div className="form-group">
                                 
-                                <input type="file" className=""
+                                <input type="file" name="file"  placeholder="" className=""
+                                    onChange={handleImage}
                                     
                                 />
+                                {
+                                    !loading ?
+                                    <div className="sk-circle">
+                                        <div className="sk-circle1 sk-child"></div>
+                                        <div className="sk-circle2 sk-child"></div>
+                                        <div className="sk-circle3 sk-child"></div>
+                                        <div className="sk-circle4 sk-child"></div>
+                                        <div className="sk-circle5 sk-child"></div>
+                                        <div className="sk-circle6 sk-child"></div>
+                                        <div className="sk-circle7 sk-child"></div>
+                                        <div className="sk-circle8 sk-child"></div>
+                                        <div className="sk-circle9 sk-child"></div>
+                                        <div className="sk-circle10 sk-child"></div>
+                                        <div className="sk-circle11 sk-child"></div>
+                                        <div className="sk-circle12 sk-child"></div>
+                                    </div>
+                                    : null
+                                }
+                                {/* <input name="file" type="file"
+                                    className="file-upload" data-cloudinary-field="image_id"
+                                    data-form-data="{ 'transformation': {'crop':'limit','tags':'samples','width':3000,'height':2000}}"
+                                /> */}
                             </div>
                        </>
                     )
@@ -230,12 +279,15 @@ const CrearReceta = () => {
                     :
                     null
                 }
-                <button 
-                    type="button" 
-                    className={"btn " +color}
-                    onClick={siguienteForm}
-                
-            >{boton}</button>
+                {
+                    loading ?
+                    <button 
+                        type="button" 
+                        className={"btn " +color}
+                        onClick={siguienteForm}
+                    
+                    >{boton}</button> : null
+                }
                 </div>
             </FormDiv>
         </div>
