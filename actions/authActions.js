@@ -17,7 +17,7 @@ export function authUsuarioAction(){
 
         try {
             const token = localStorage.getItem("tokenRecetas");
-           //console.log(token);
+           console.log(token);
             // if(token)
             // {
             //     //Funcion para asignar el token en el Header
